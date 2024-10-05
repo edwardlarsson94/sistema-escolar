@@ -12,21 +12,26 @@ def create_login_view(window):
 
     image_path = "assets/login/logo.png"
     img = Image.open(image_path)
-    img = img.resize((200, 150), Image.Resampling.LANCZOS)
+    img = img.resize((250, 200), Image.Resampling.LANCZOS)
     photo = ImageTk.PhotoImage(img)
 
     label_image = tk.Label(window, image=photo, bg=BACKGROUND_COLOR)
     label_image.image = photo
-    label_image.pack(pady=20)
+    label_image.pack(pady=20) 
 
     title_font = font.Font(family="Helvetica", size=24, weight="bold")
     subtitle_font = font.Font(family="Helvetica", size=10)
 
     label_title = tk.Label(window, text="Welcome Back!", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=title_font)
-    label_title.pack(pady=20)
-
     label_subtitle = tk.Label(window, text="Welcome back, we missed you", bg=BACKGROUND_COLOR, fg=SUBTITLE_COLOR, font=subtitle_font)
-    label_subtitle.pack(pady=5)
+
+    def adjust_positions():
+        
+        window_width = window.winfo_width()
+        label_title.place(x=window_width // 2, y=180, anchor="center")
+        label_subtitle.place(x=window_width // 2, y=220, anchor="center")
+
+    window.after(100, adjust_positions)
 
     tk.Label(window, bg=BACKGROUND_COLOR).pack(pady=10)
 
