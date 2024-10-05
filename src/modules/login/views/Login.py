@@ -18,7 +18,7 @@ def create_login_view(window):
 
     label_image = tk.Label(window, image=photo, bg=BACKGROUND_COLOR)
     label_image.image = photo
-    label_image.pack(pady=20) 
+    label_image.pack(pady=40) 
 
     title_font = font.Font(family="Helvetica", size=24, weight="bold")
     subtitle_font = font.Font(family="Helvetica", size=10)
@@ -27,25 +27,22 @@ def create_login_view(window):
     label_subtitle = tk.Label(window, text="Welcome back, we missed you", bg=BACKGROUND_COLOR, fg=SUBTITLE_COLOR, font=subtitle_font)
 
     def adjust_positions():
-        
         window_width = window.winfo_width()
-        label_title.place(x=window_width // 2, y=180, anchor="center")
-        label_subtitle.place(x=window_width // 2, y=220, anchor="center")
+        label_title.place(x=window_width // 2, y=220, anchor="center") 
+        label_subtitle.place(x=window_width // 2, y=260, anchor="center")  
 
     window.after(100, adjust_positions)
 
-    tk.Label(window, bg=BACKGROUND_COLOR).pack(pady=10)
-
     label_user = tk.Label(window, text="Username:", bg=BACKGROUND_COLOR, fg=LABEL_COLOR, font=("Helvetica", 12))
-    label_user.pack(pady=5)
+    label_user.pack(pady=10)  
 
     entry_user = tk.Entry(window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, font=("Helvetica", 12), insertbackground=ENTRY_FOREGROUND, relief="flat")
-    entry_user.pack(ipady=8, ipadx=10, pady=10)
+    entry_user.pack(ipady=8, ipadx=10, pady=10) 
 
     label_password = tk.Label(window, text="Password:", bg=BACKGROUND_COLOR, fg=LABEL_COLOR, font=("Helvetica", 12))
-    label_password.pack(pady=5)
-
+    label_password.pack(pady=10) 
+    
     entry_password = tk.Entry(window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, show="*", font=("Helvetica", 12), insertbackground=ENTRY_FOREGROUND, relief="flat")
-    entry_password.pack(ipady=8, ipadx=10, pady=10)
-
+    entry_password.pack(ipady=8, ipadx=10, pady=10)  
+    
     create_login_button(window, lambda: verify_login(window, entry_user, entry_password, show_home_view), entry_user, entry_password)
