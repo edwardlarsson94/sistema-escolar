@@ -34,7 +34,13 @@ Si Tkinter está correctamente instalado, verás una pequeña ventana gráfica d
 Para ejecutar la aplicación, simplemente usa el siguiente comando desde la raíz del proyecto:
 
 ```bash
-PYTHONPATH=. python3 src/index.py
+python index.py
+```
+
+o puedes utilizar 
+
+```bash
+python3 index.py
 ```
 
 Este comando abrirá la ventana principal de la aplicación donde se puede iniciar sesión con las credenciales predeterminadas.
