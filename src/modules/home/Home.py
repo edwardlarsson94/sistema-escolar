@@ -4,7 +4,7 @@ from constants.Colors import (
     BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER
 )
 from components.Table import create_student_table, populate_table, bind_row_selection
-from src.modules.student.Student import open_new_student_form, on_click_action, edit_student, delete_student
+from src.modules.student.Student import open_new_student_form, on_click_action
 
 def show_home_view():
     home_window = tk.Tk()
