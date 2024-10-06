@@ -10,6 +10,13 @@ Asegúrate de tener instalado:
 - **Python 3.6** o superior
 - **Tkinter** (que viene incluido con la mayoría de las distribuciones de Python)
 
+### Instalación de Pillow
+
+Si no tienes Pillow instalado, puedes instalarlo con el siguiente comando o buscar la versión para tu sistema en [Pillow](https://pillow.readthedocs.io/en/stable/installation.html).
+
+```bash
+brew install pillow
+
 ### Instalación de Python y Tkinter
 
 Si no tienes Python instalado, puedes descargarlo desde [python.org](https://www.python.org/downloads/).
@@ -17,6 +24,7 @@ Si no tienes Python instalado, puedes descargarlo desde [python.org](https://www
 **Para verificar si tienes Tkinter instalado**, abre un terminal y ejecuta el siguiente comando:
 
 ```bash
+PYTHONPATH=. python3 -m tkinter
 python3 -m tkinter
 ```
 

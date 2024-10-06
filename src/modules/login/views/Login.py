@@ -1,13 +1,23 @@
 import tkinter as tk
 from tkinter import font
-from modules.login.services.LoginService import verify_login
+from PIL import Image, ImageTk
 from constants.Colors import BACKGROUND_COLOR, ENTRY_BACKGROUND, ENTRY_FOREGROUND, LABEL_COLOR, TITLE_COLOR, SUBTITLE_COLOR
+from src.modules.login.services.LoginService import verify_login
 from components.Buttons import create_login_button
 
 def create_login_view(window):
     window.title("Welcome Back!")
-    window.geometry("400x500")
+    window.geometry("400x600")
     window.configure(bg=BACKGROUND_COLOR)
+
+    image_path = "assets/login/logo.png"
+    img = Image.open(image_path)
+    img = img.resize((200, 150), Image.Resampling.LANCZOS)
+    photo = ImageTk.PhotoImage(img)
+
+    label_image = tk.Label(window, image=photo, bg=BACKGROUND_COLOR)
+    label_image.image = photo
+    label_image.pack(pady=20)
 
     title_font = font.Font(family="Helvetica", size=24, weight="bold")
     subtitle_font = font.Font(family="Helvetica", size=10)
