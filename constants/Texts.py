@@ -3,3 +3,13 @@ LOGIN_SISTEMA_ESCOLAR_SUBTITLE = "Ahora puedes iniciar sesión!!"
 LOGIN_LABEL_USER = "Usuario:"
 LOGIN_LABEL_PASSWORD = "Contraseña:"
 LOGIN_BUTTON_LOGIN = "¡Ingresar!"
+
+HOME_TITLE = "Sistema Escolar"
+HOME_SUBTITLE = "Bienvenido a Sistema Escolar"
+HOME_BUTTON_AGREGAR_ESTUDIANTE = "Agregar Estudiante"
+HOME_BUTTON_EDITAR = "Editar"
+HOME_BUTTON_BORRAR = "Borrar"
+
+STUDENT_TABLE_CEDULA = "Cédula"
+STUDENT_TABLE_NOMBRE = "Nombre"
+STUDENT_BUTTON_GUARDAR = "Guardar"
