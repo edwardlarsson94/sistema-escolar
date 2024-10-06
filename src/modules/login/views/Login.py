@@ -1,17 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
+from modules.login.services.LoginService import verify_login
 
-# Función para verificar las credenciales
-def verify_login(entry_user, entry_password):
-    user = entry_user.get()
-    password = entry_password.get()
-    
-    if user == "admin" and password == "1234":
-        messagebox.showinfo("Login exitoso", "¡Bienvenido!")
-    else:
-        messagebox.showerror("Error", "Usuario o contraseña incorrectos")
-
-# Función para crear la interfaz del login
 def create_login_view(window):
     window.title("Sistema de Login")
     window.geometry("300x150")
