@@ -63,6 +63,13 @@ def show_home_view():
     label_title = tk.Label(home_window, text="Welcome to the Home Page!", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 24, "bold"))
     label_title.pack(pady=20)
 
+    top_frame = tk.Frame(home_window, bg=BACKGROUND_COLOR)
+    top_frame.pack(pady=10)
+
+    new_student_button = tk.Button(top_frame, text="Agregar Estudiante", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
+                                   command=lambda: open_new_student_form(tree))
+    new_student_button.pack(side="left", padx=10)
+
     style = ttk.Style()
     style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25)
     style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background=BACKGROUND_COLOR, foreground=TITLE_COLOR)
@@ -91,10 +98,6 @@ def show_home_view():
 
     actions_frame = tk.Frame(home_window, bg=BACKGROUND_COLOR)
     actions_frame.pack(pady=20)
-
-    new_student_button = tk.Button(actions_frame, text="Agregar Estudiante", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
-                                   command=lambda: open_new_student_form(tree))
-    new_student_button.pack(side="left", padx=10)
 
     edit_button = tk.Button(actions_frame, text="Editar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     delete_button = tk.Button(actions_frame, text="Borrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
