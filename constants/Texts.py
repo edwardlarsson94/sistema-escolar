@@ -1,0 +1,5 @@
+LOGIN_SISTEMA_ESCOLAR_TITLE = "Sistema Escolar"
+LOGIN_SISTEMA_ESCOLAR_SUBTITLE = "Ahora puedes iniciar sesión!!"
+LOGIN_LABEL_USER = "Usuario:"
+LOGIN_LABEL_PASSWORD = "Contraseña:"
+LOGIN_BUTTON_LOGIN = "¡Ingresar!"
