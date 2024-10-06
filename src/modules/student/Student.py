@@ -1,6 +1,6 @@
 import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
-from constants.Texts import (STUDENT_TITLE_EDITAR, STUDENT_TITLE_AGREGAR, STUDENT_TITLE_CONFIRMAR_BORRAR, STUDENT_TABLE_CEDULA, STUDENT_TABLE_NOMBRE, GLOBAL_BUTTON_GUARDAR, STUDENT_TABLE_CONFIRMAR, STUDENT_BUTTON_CONFIRMAR, STUDENT_BUTTON_CANCELAR)
+from constants.Texts import (STUDENT_TITLE_EDITAR, STUDENT_TITLE_AGREGAR, GLOBAL_CONFIRMAR_BORRAR, GLOBAL_TABLE_CEDULA, GLOBAL_TABLE_NOMBRE, GLOBAL_BUTTON_GUARDAR, GLOBAL_BUTTON_CONFIRMAR, GLOBAL_BUTTON_CANCELAR)
 
 def add_student(tree, cedula, nombre, new_window):
     tree.insert("", "end", values=(cedula, nombre))
@@ -18,13 +18,13 @@ def open_edit_student_form(tree, selected_item, student_data):
     new_window.geometry("300x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
-    label_cedula = tk.Label(new_window, text=STUDENT_TABLE_CEDULA, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_cedula = tk.Label(new_window, text=GLOBAL_TABLE_CEDULA, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_cedula.pack(pady=5)
     entry_cedula = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_cedula.insert(0, student_data[0])
     entry_cedula.pack(pady=5)
 
-    label_nombre = tk.Label(new_window, text=STUDENT_TABLE_NOMBRE, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_nombre = tk.Label(new_window, text=GLOBAL_TABLE_NOMBRE, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_nombre.pack(pady=5)
     entry_nombre = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_nombre.insert(0, student_data[1])
@@ -39,7 +39,7 @@ def open_edit_student_form(tree, selected_item, student_data):
 
 def confirm_delete_student(tree, selected_item, student_id):
     new_window = tk.Toplevel()
-    new_window.title(STUDENT_TITLE_CONFIRMAR_BORRAR)
+    new_window.title(GLOBAL_CONFIRMAR_BORRAR)
     new_window.geometry("300x150")
     new_window.configure(bg=BACKGROUND_COLOR)
 
@@ -52,9 +52,9 @@ def confirm_delete_student(tree, selected_item, student_id):
         print(f"Estudiante con cédula {student_id} borrado")
         new_window.destroy()
 
-    button_confirm = tk.Button(new_window, text=STUDENT_TABLE_CONFIRMAR, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
+    button_confirm = tk.Button(new_window, text=GLOBAL_BUTTON_CONFIRMAR, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
                                command=delete_confirmed)
-    button_cancel = tk.Button(new_window, text=STUDENT_BUTTON_CANCELAR, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
+    button_cancel = tk.Button(new_window, text=GLOBAL_BUTTON_CANCELAR, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
                               command=new_window.destroy)
 
     button_confirm.bind("<Enter>", on_enter)
@@ -86,12 +86,12 @@ def open_new_student_form(tree):
     new_window.geometry("300x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
-    label_cedula = tk.Label(new_window, text=STUDENT_TABLE_CEDULA, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_cedula = tk.Label(new_window, text=GLOBAL_TABLE_CEDULA, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_cedula.pack(pady=5)
     entry_cedula = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_cedula.pack(pady=5)
 
-    label_nombre = tk.Label(new_window, text=STUDENT_TABLE_NOMBRE, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_nombre = tk.Label(new_window, text=GLOBAL_TABLE_NOMBRE, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_nombre.pack(pady=5)
     entry_nombre = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_nombre.pack(pady=5)
