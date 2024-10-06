@@ -1,9 +1,10 @@
 import tkinter as tk
-from tkinter import ttk
 from constants.Colors import (
     BACKGROUND_COLOR, TITLE_COLOR, 
-    ENTRY_BACKGROUND, ENTRY_FOREGROUND, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER
+    BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER,
+    ENTRY_BACKGROUND, ENTRY_FOREGROUND
 )
+from components.Table import create_student_table, populate_table, bind_row_selection
 
 def edit_student(student_id):
     print(f"Editar estudiante con cédula {student_id}")
@@ -70,31 +71,8 @@ def show_home_view():
                                    command=lambda: open_new_student_form(tree))
     new_student_button.pack(side="left", padx=10)
 
-    style = ttk.Style()
-    style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25)
-    style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background=BACKGROUND_COLOR, foreground=TITLE_COLOR)
-
-    tree = ttk.Treeview(home_window, columns=("cedula", "nombre"), show="headings", height=8)
-    tree.pack(pady=10)
-
-    tree.heading("cedula", text="Cédula")
-    tree.heading("nombre", text="Nombre y Apellido")
-    tree.column("cedula", width=150)
-    tree.column("nombre", width=200)
-
-    students = [
-        {"cedula": "12345678", "nombre": "Juan Pérez"},
-        {"cedula": "87654321", "nombre": "María Gómez"},
-        {"cedula": "11223344", "nombre": "Carlos Díaz"},
-    ]
-
-    for student in students:
-        tree.insert("", "end", values=(student["cedula"], student["nombre"]))
-
-    def on_row_select(event):
-        on_click_action(tree, edit_button, delete_button)
-
-    tree.bind("<<TreeviewSelect>>", on_row_select)
+    tree = create_student_table(home_window)
+    populate_table(tree)
 
     actions_frame = tk.Frame(home_window, bg=BACKGROUND_COLOR)
     actions_frame.pack(pady=20)
@@ -109,5 +87,6 @@ def show_home_view():
 
     edit_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
+    bind_row_selection(tree, edit_button, delete_button, on_click_action)
 
     home_window.mainloop()
