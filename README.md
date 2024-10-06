@@ -24,7 +24,6 @@ Si no tienes Python instalado, puedes descargarlo desde [python.org](https://www
 **Para verificar si tienes Tkinter instalado**, abre un terminal y ejecuta el siguiente comando:
 
 ```bash
-PYTHONPATH=. python3 -m tkinter
 python3 -m tkinter
 ```
 
