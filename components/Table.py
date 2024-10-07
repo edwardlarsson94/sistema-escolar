@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from constants.Colors import BACKGROUND_COLOR, TITLE_COLOR, ENTRY_BACKGROUND, ENTRY_FOREGROUND
+from constants.Texts import (GLOBAL_TABLE_NIT, GLOBAL_NAME_AND_SURNAME)
+
 
 def create_student_table(window):
     style = ttk.Style()
@@ -10,8 +12,8 @@ def create_student_table(window):
     tree = ttk.Treeview(window, columns=("cedula", "nombre"), show="headings", height=8)
     tree.pack(pady=10)
 
-    tree.heading("cedula", text="Cédula")
-    tree.heading("nombre", text="Nombre y Apellido")
+    tree.heading("cedula", text=GLOBAL_TABLE_NIT)
+    tree.heading("nombre", text=GLOBAL_NAME_AND_SURNAME)
     tree.column("cedula", width=150)
     tree.column("nombre", width=200)
 

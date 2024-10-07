@@ -1,6 +1,6 @@
 import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
-from constants.Texts import (STUDENT_TITLE_EDIT,GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_TABLE_NIT)
+from constants.Texts import (STUDENT_TITLE_EDIT,GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_TABLE_NIT,GLOBAL_BUTTON_CONFIRM,GLOBAL_BUTTON_CANCEL)
 
 def add_teacher(tree, nit, name, new_window):
     tree.insert("", "end", values=(nit, name))
@@ -52,9 +52,9 @@ def confirm_delete_teacher(tree, selected_item, teacher_id):
         print(f"Docente con cédula {teacher_id} borrado")
         new_window.destroy()
 
-    button_confirm = tk.Button(new_window, text="Confirmar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
+    button_confirm = tk.Button(new_window, text=GLOBAL_BUTTON_CONFIRM, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
                                command=delete_confirmed)
-    button_cancel = tk.Button(new_window, text="Cancelar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
+    button_cancel = tk.Button(new_window, text=GLOBAL_BUTTON_CANCEL, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
                               command=new_window.destroy)
 
     button_confirm.bind("<Enter>", on_enter)
