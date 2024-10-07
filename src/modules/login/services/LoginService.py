@@ -1,7 +1,13 @@
+from api.controllers.userController import authenticate_user
+
 def verify_login(window, entry_user, entry_password, show_home_view):
-    user = entry_user.get()
+    username = entry_user.get()
     password = entry_password.get()
     
-    if user == "admin" and password == "1234":
+    authenticated, user = authenticate_user(username, password)
+    
+    if authenticated:
         window.destroy()
         show_home_view()
+    else:
+        print("Credenciales incorrectas")
