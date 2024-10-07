@@ -5,5 +5,3 @@ def verify_login(window, entry_user, entry_password, show_home_view):
     if user == "admin" and password == "1234":
         window.destroy()
         show_home_view()
-    else:
-        messagebox.showerror("Error", "Usuario o contraseña incorrectos")
