@@ -1,6 +1,6 @@
 import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
-from constants.Texts import (DOCENTE_TABLE_CEDULA, DOCENTE_TABLE_NOMBRE, GLOBAL_BUTTON_GUARDAR, GLOBAL_TITLE_EDITAR)
+from constants.Texts import (STUDENT_TITLE_EDIT, PROFESSOR_TITLE_ADD, GLOBAL_BUTTON_SAVE, GLOBAL_STUDENT_TITLE_ADD)
 
 def add_docente(tree, cedula, nombre, new_window):
     tree.insert("", "end", values=(cedula, nombre))
@@ -14,23 +14,23 @@ def update_docente(tree, selected_item, cedula, nombre, new_window):
 
 def open_edit_docente_form(tree, selected_item, docente_data):
     new_window = tk.Toplevel()
-    new_window.title(GLOBAL_TITLE_EDITAR)
+    new_window.title(GLOBAL_STUDENT_TITLE_ADD)
     new_window.geometry("300x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
-    label_cedula = tk.Label(new_window, text=DOCENTE_TABLE_CEDULA, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_cedula = tk.Label(new_window, text=STUDENT_TITLE_EDIT, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_cedula.pack(pady=5)
     entry_cedula = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_cedula.insert(0, docente_data[0])
     entry_cedula.pack(pady=5)
 
-    label_nombre = tk.Label(new_window, text=DOCENTE_TABLE_NOMBRE, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_nombre = tk.Label(new_window, text=PROFESSOR_TITLE_ADD, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_nombre.pack(pady=5)
     entry_nombre = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_nombre.insert(0, docente_data[1])
     entry_nombre.pack(pady=5)
 
-    save_button = tk.Button(new_window, text=GLOBAL_BUTTON_GUARDAR, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
+    save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: update_docente(tree, selected_item, entry_cedula.get(), entry_nombre.get(), new_window))
     save_button.pack(pady=10)
 
@@ -86,17 +86,17 @@ def open_new_docente_form(tree):
     new_window.geometry("300x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
-    label_cedula = tk.Label(new_window, text=DOCENTE_TABLE_CEDULA, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_cedula = tk.Label(new_window, text=STUDENT_TITLE_EDIT, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_cedula.pack(pady=5)
     entry_cedula = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_cedula.pack(pady=5)
 
-    label_nombre = tk.Label(new_window, text=DOCENTE_TABLE_NOMBRE, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_nombre = tk.Label(new_window, text=PROFESSOR_TITLE_ADD, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_nombre.pack(pady=5)
     entry_nombre = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_nombre.pack(pady=5)
 
-    save_button = tk.Button(new_window, text=GLOBAL_BUTTON_GUARDAR, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
+    save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: add_docente(tree, entry_cedula.get(), entry_nombre.get(), new_window))
     save_button.pack(pady=10)
 
