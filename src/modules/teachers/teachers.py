@@ -1,6 +1,6 @@
 import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
-from constants.Texts import (STUDENT_TITLE_EDIT, PROFESSOR_TITLE_ADD, GLOBAL_BUTTON_SAVE, GLOBAL_STUDENT_TITLE_ADD)
+from constants.Texts import (STUDENT_TITLE_EDIT,GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_TABLE_NIT)
 
 def add_teacher(tree, nit, name, new_window):
     tree.insert("", "end", values=(nit, name))
@@ -14,17 +14,17 @@ def update_teacher(tree, selected_item, nit, name, new_window):
 
 def open_edit_teacher_form(tree, selected_item, teacher_data):
     new_window = tk.Toplevel()
-    new_window.title(GLOBAL_STUDENT_TITLE_ADD)
+    new_window.title(GLOBAL_TABLE_NIT)
     new_window.geometry("300x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
-    label_nit = tk.Label(new_window, text=STUDENT_TITLE_EDIT, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_nit = tk.Label(new_window, text=GLOBAL_TABLE_NIT, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_nit.pack(pady=5)
     entry_nit = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_nit.insert(0, teacher_data[0])
     entry_nit.pack(pady=5)
 
-    label_name = tk.Label(new_window, text=PROFESSOR_TITLE_ADD, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_name = tk.Label(new_window, text=GLOBAL_TABLE_NAME, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_name.pack(pady=5)
     entry_name = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_name.insert(0, teacher_data[1])
@@ -86,12 +86,12 @@ def open_new_teacher_form(tree):
     new_window.geometry("300x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
-    label_nit = tk.Label(new_window, text=STUDENT_TITLE_EDIT, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_nit = tk.Label(new_window, text=GLOBAL_TABLE_NIT, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_nit.pack(pady=5)
     entry_nit = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_nit.pack(pady=5)
 
-    label_name = tk.Label(new_window, text=PROFESSOR_TITLE_ADD, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    label_name = tk.Label(new_window, text=GLOBAL_TABLE_NAME, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     label_name.pack(pady=5)
     entry_name = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
     entry_name.pack(pady=5)
