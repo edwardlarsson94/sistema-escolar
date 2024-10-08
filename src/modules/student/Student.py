@@ -1,6 +1,6 @@
 import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
-from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL)
+from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 
 def add_student(tree, nit, name, lastName, age, sex, address, course, phone, new_window):
     tree.insert("", "end", values=(nit, name, lastName, age, sex, address, course, phone))
@@ -19,14 +19,14 @@ def open_student_details(student_data):
     details_window.configure(bg=BACKGROUND_COLOR)
 
     fields = [
-        ("Cédula", student_data[0] if len(student_data) > 0 else "N/A"),
-        ("Nombre", student_data[1] if len(student_data) > 1 else "N/A"),
-        ("Apellido", student_data[2] if len(student_data) > 2 else "N/A"),
-        ("Edad", student_data[3] if len(student_data) > 3 else "N/A"),
-        ("Sexo", student_data[4] if len(student_data) > 4 else "N/A"),
-        ("Dirección", student_data[5] if len(student_data) > 5 else "N/A"),
-        ("Año que cursa", student_data[6] if len(student_data) > 6 else "N/A"),
-        ("Teléfono", student_data[7] if len(student_data) > 7 else "N/A")
+        (GLOBAL_TABLE_NIT, student_data[0] if len(student_data) > 0 else "N/A"),
+        (GLOBAL_TABLE_NAME, student_data[1] if len(student_data) > 1 else "N/A"),
+        (GLOBAL_LAST_NAME, student_data[2] if len(student_data) > 2 else "N/A"),
+        (GLOBAL_AGE, student_data[3] if len(student_data) > 3 else "N/A"),
+        (GLOBAL_SEX, student_data[4] if len(student_data) > 4 else "N/A"),
+        (GLOBAL_ADDRESS, student_data[5] if len(student_data) > 5 else "N/A"),
+        (GLOBAL_COURSE, student_data[6] if len(student_data) > 6 else "N/A"),
+        (GLOBAL_PHONE, student_data[7] if len(student_data) > 7 else "N/A")
     ]
 
     for label_text, value in fields:
@@ -47,12 +47,12 @@ def open_edit_student_form(tree, selected_item, student_data):
     fields = [
         ("Cédula", GLOBAL_TABLE_NIT),
         ("Nombre", GLOBAL_TABLE_NAME),
-        ("Apellido", "Apellido"),
-        ("Edad", "Edad"),
-        ("Sexo", "Sexo"),
-        ("Dirección", "Dirección"),
-        ("Año que cursa", "Año que cursa"),
-        ("Teléfono", "Teléfono")
+        ("Apellido", GLOBAL_LAST_NAME),
+        ("Edad", GLOBAL_AGE),
+        ("Sexo", GLOBAL_SEX),
+        ("Dirección", GLOBAL_ADDRESS),
+        ("Año que cursa", GLOBAL_COURSE),
+        ("Teléfono", GLOBAL_PHONE)
     ]
 
     entries = {}
@@ -67,14 +67,14 @@ def open_edit_student_form(tree, selected_item, student_data):
 
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: update_student(tree, selected_item, 
-                                                           entries["Cédula"].get(),
-                                                           entries["Nombre"].get(),
-                                                           entries["Apellido"].get(),
-                                                           entries["Edad"].get(),
-                                                           entries["Sexo"].get(),
-                                                           entries["Dirección"].get(),
-                                                           entries["Año que cursa"].get(),
-                                                           entries["Teléfono"].get(),
+                                                           entries[GLOBAL_TABLE_NIT].get(),
+                                                           entries[GLOBAL_TABLE_NAME].get(),
+                                                           entries[GLOBAL_LAST_NAME].get(),
+                                                           entries[GLOBAL_AGE].get(),
+                                                           entries[GLOBAL_SEX].get(),
+                                                           entries[GLOBAL_ADDRESS].get(),
+                                                           entries[GLOBAL_COURSE].get(),
+                                                           entries[GLOBAL_PHONE].get(),
                                                            new_window))
     save_button.pack(pady=10)
 
@@ -136,12 +136,12 @@ def open_new_student_form(tree):
     fields = [
         ("Cédula", GLOBAL_TABLE_NIT),
         ("Nombre", GLOBAL_TABLE_NAME),
-        ("Apellido", "Apellido"),
-        ("Edad", "Edad"),
-        ("Sexo", "Sexo"),
-        ("Dirección", "Dirección"),
-        ("Año que cursa", "Año que cursa"),
-        ("Teléfono", "Teléfono")
+        ("Apellido", GLOBAL_LAST_NAME),
+        ("Edad", GLOBAL_AGE),
+        ("Sexo", GLOBAL_SEX),
+        ("Dirección", GLOBAL_ADDRESS),
+        ("Año que cursa", GLOBAL_COURSE),
+        ("Teléfono", GLOBAL_PHONE)
     ]
 
     entries = {}
@@ -155,14 +155,14 @@ def open_new_student_form(tree):
 
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: add_student(tree, 
-                                                        entries["Cédula"].get(),
-                                                        entries["Nombre"].get(),
-                                                        entries["Apellido"].get(),
-                                                        entries["Edad"].get(),
-                                                        entries["Sexo"].get(),
-                                                        entries["Dirección"].get(),
-                                                        entries["Año que cursa"].get(),
-                                                        entries["Teléfono"].get(),
+                                                        entries[GLOBAL_TABLE_NIT].get(),
+                                                        entries[GLOBAL_TABLE_NAME].get(),
+                                                        entries[GLOBAL_LAST_NAME].get(),
+                                                        entries[GLOBAL_AGE].get(),
+                                                        entries[GLOBAL_SEX].get(),
+                                                        entries[GLOBAL_ADDRESS].get(),
+                                                        entries[GLOBAL_COURSE].get(),
+                                                        entries[GLOBAL_PHONE].get(),
                                                         new_window))
     save_button.pack(pady=10)
 
