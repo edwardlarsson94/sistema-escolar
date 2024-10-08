@@ -9,7 +9,7 @@ from components.ButtonLogin import create_login_button
 
 def create_login_view(window):
     window.title(GLOBAL_SISTEMA_ESCOLAR_TITLE)
-    window.geometry("400x600")
+    window.geometry("500x600")
     window.configure(bg=BACKGROUND_COLOR)
 
     image_path = "assets/login/logo.png"
