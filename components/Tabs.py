@@ -2,8 +2,8 @@ import tkinter as tk
 from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, TITLE_COLOR
 from constants.Texts import HOME_SUBTITLE, GLOBAL_STUDENT_TITLE_ADD, HOME_BUTTON_DELETE, HOME_BUTTON_EDIT, TEACHER_TITLE_ADD, GLOBAL_STUDENT,GLOBAL_TEACHER
 from components.Table import create_student_table, populate_table, bind_row_selection
-from src.modules.student.Student import open_new_student_form, open_edit_student_form, on_click_action as on_student_click_action
-from src.modules.teachers.Teachers import open_new_teacher_form, open_edit_teacher_form, on_click_action as on_teacher_click_action
+from src.modules.student.Student import open_new_student_form, on_click_action as on_student_click_action
+from src.modules.teachers.Teachers import open_new_teacher_form, on_click_action as on_teacher_click_action
 
 def create_student_tab(notebook):
     student_tab = tk.Frame(notebook, bg=BACKGROUND_COLOR)
@@ -25,17 +25,19 @@ def create_student_tab(notebook):
     actions_frame = tk.Frame(student_tab, bg=BACKGROUND_COLOR)
     actions_frame.pack(pady=20)
 
-    edit_button = tk.Button(actions_frame, text=HOME_BUTTON_EDIT, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled", command=lambda: open_edit_student_form(student_tree, None, None))
+    edit_button = tk.Button(actions_frame, text=HOME_BUTTON_EDIT, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
+    details_button = tk.Button(actions_frame, text="Detalles", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     delete_button = tk.Button(actions_frame, text=HOME_BUTTON_DELETE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
 
-    edit_button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
-    edit_button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
-    delete_button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
-    delete_button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
+    for button in [edit_button, details_button, delete_button]:
+        button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
+        button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
 
     edit_button.pack(side="left", padx=10)
+    details_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
-    bind_row_selection(student_tree, edit_button, delete_button, on_student_click_action)
+
+    bind_row_selection(student_tree, edit_button, delete_button, details_button, on_student_click_action)
 
     return student_tab
 
@@ -53,22 +55,27 @@ def create_teacher_tab(notebook):
                                    command=lambda: open_new_teacher_form(teacher_tree))
     new_teacher_button.pack(side="left", padx=10)
 
-    teacher_tree = create_student_table(teacher_tab)  # Reutiliza la función si la tabla tiene el mismo formato
+    teacher_tree = create_student_table(teacher_tab)
     populate_table(teacher_tree)
 
     actions_frame = tk.Frame(teacher_tab, bg=BACKGROUND_COLOR)
     actions_frame.pack(pady=20)
 
-    edit_button = tk.Button(actions_frame, text=HOME_BUTTON_EDIT, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled", command=lambda: open_edit_teacher_form(teacher_tree, None, None))
+    edit_button = tk.Button(actions_frame, text=HOME_BUTTON_EDIT, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
+    details_button = tk.Button(actions_frame, text="Detalles", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     delete_button = tk.Button(actions_frame, text=HOME_BUTTON_DELETE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
 
     edit_button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
     edit_button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
+    details_button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
+    details_button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
     delete_button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
     delete_button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
 
     edit_button.pack(side="left", padx=10)
+    details_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
-    bind_row_selection(teacher_tree, edit_button, delete_button, on_teacher_click_action)
+
+    bind_row_selection(teacher_tree, edit_button, delete_button, details_button, on_teacher_click_action)
 
     return teacher_tab

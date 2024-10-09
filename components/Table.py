@@ -29,10 +29,10 @@ def populate_table(tree):
     for student in students:
         tree.insert("", "end", values=(student["cedula"], student["nombre"]))
 
-def handle_row_selection(event, tree, edit_button, delete_button, on_click_action):
+def handle_row_selection(event, tree, edit_button, delete_button, details_button, on_click_action):
     selected_item = tree.selection()
     if selected_item:
-        on_click_action(tree, edit_button, delete_button)
+        on_click_action(tree, edit_button, delete_button, details_button)
 
-def bind_row_selection(tree, edit_button, delete_button, on_click_action):
-    tree.bind("<<TreeviewSelect>>", lambda event: handle_row_selection(event, tree, edit_button, delete_button, on_click_action))
+def bind_row_selection(tree, edit_button, delete_button, details_button, on_click_action):
+    tree.bind("<<TreeviewSelect>>", lambda event: handle_row_selection(event, tree, edit_button, delete_button, details_button, on_click_action))

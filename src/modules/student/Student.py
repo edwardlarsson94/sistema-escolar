@@ -2,15 +2,41 @@ import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL)
 
-def add_student(tree, cedula, nombre, apellido, edad, sexo, direccion, ano_curso, telefono, new_window):
-    tree.insert("", "end", values=(cedula, nombre, apellido, edad, sexo, direccion, ano_curso, telefono))
-    print(f"Nuevo estudiante agregado con cédula: {cedula}, nombre: {nombre}, apellido: {apellido}")
+def add_student(tree, nit, name, lastName, age, sex, address, course, phone, new_window):
+    tree.insert("", "end", values=(nit, name, lastName, age, sex, address, course, phone))
+    print(f"Nuevo estudiante agregado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
     new_window.destroy()
 
-def update_student(tree, selected_item, cedula, nombre, apellido, edad, sexo, direccion, ano_curso, telefono, new_window):
-    tree.item(selected_item, values=(cedula, nombre, apellido, edad, sexo, direccion, ano_curso, telefono))
-    print(f"Estudiante actualizado con cédula: {cedula}, nombre: {nombre}, apellido: {apellido}")
+def update_student(tree, selected_item, nit, name, lastName, age, sex, address, course, phone, new_window):
+    tree.item(selected_item, values=(nit, name, lastName, age, sex, address, course, phone))
+    print(f"Estudiante actualizado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
     new_window.destroy()
+
+def open_student_details(student_data):
+    details_window = tk.Toplevel()
+    details_window.title("Detalles del Estudiante")
+    details_window.geometry("300x400")
+    details_window.configure(bg=BACKGROUND_COLOR)
+
+    fields = [
+        ("Cédula", student_data[0] if len(student_data) > 0 else "N/A"),
+        ("Nombre", student_data[1] if len(student_data) > 1 else "N/A"),
+        ("Apellido", student_data[2] if len(student_data) > 2 else "N/A"),
+        ("Edad", student_data[3] if len(student_data) > 3 else "N/A"),
+        ("Sexo", student_data[4] if len(student_data) > 4 else "N/A"),
+        ("Dirección", student_data[5] if len(student_data) > 5 else "N/A"),
+        ("Año que cursa", student_data[6] if len(student_data) > 6 else "N/A"),
+        ("Teléfono", student_data[7] if len(student_data) > 7 else "N/A")
+    ]
+
+    for label_text, value in fields:
+        label = tk.Label(details_window, text=f"{label_text}: {value}", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
+        label.pack(pady=5)
+
+    close_button = tk.Button(details_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=details_window.destroy)
+    close_button.pack(pady=10)
+    close_button.bind("<Enter>", on_enter)
+    close_button.bind("<Leave>", on_leave)
 
 def open_edit_student_form(tree, selected_item, student_data):
     new_window = tk.Toplevel()
@@ -89,14 +115,17 @@ def on_enter(e):
 def on_leave(e):
     e.widget['background'] = BUTTON_COLOR
 
-def on_click_action(tree, edit_button, delete_button):
+def on_click_action(tree, edit_button, delete_button, details_button):
     selected_item = tree.selection()
     if selected_item:
         selected_student = tree.item(selected_item, 'values')
-        student_id = selected_student[0]
-
         edit_button.config(state="normal", command=lambda: open_edit_student_form(tree, selected_item, selected_student))
-        delete_button.config(state="normal", command=lambda: confirm_delete_student(tree, selected_item, student_id))
+        delete_button.config(state="normal", command=lambda: confirm_delete_student(tree, selected_item, selected_student[0]))
+        details_button.config(state="normal", command=lambda: open_student_details(selected_student))
+    else:
+        edit_button.config(state="disabled")
+        delete_button.config(state="disabled")
+        details_button.config(state="disabled")
 
 def open_new_student_form(tree):
     new_window = tk.Toplevel()
@@ -139,5 +168,3 @@ def open_new_student_form(tree):
 
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
-    
-    

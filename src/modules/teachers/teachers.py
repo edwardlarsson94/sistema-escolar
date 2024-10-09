@@ -1,6 +1,6 @@
 import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
-from constants.Texts import (STUDENT_TITLE_EDIT,GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_TABLE_NIT,GLOBAL_BUTTON_CONFIRM,GLOBAL_BUTTON_CANCEL)
+from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL)
 
 def add_teacher(tree, nit, name, new_window):
     tree.insert("", "end", values=(nit, name))
@@ -12,9 +12,29 @@ def update_teacher(tree, selected_item, nit, name, new_window):
     print(f"Docente actualizado con cédula: {nit} y nombre: {name}")
     new_window.destroy()
 
+def open_teacher_details(teacher_data):
+    details_window = tk.Toplevel()
+    details_window.title("Detalles del Docente")
+    details_window.geometry("300x200")
+    details_window.configure(bg=BACKGROUND_COLOR)
+
+    fields = [
+        ("Cédula", teacher_data[0] if len(teacher_data) > 0 else "N/A"),
+        ("Nombre", teacher_data[1] if len(teacher_data) > 1 else "N/A")
+    ]
+
+    for label_text, value in fields:
+        label = tk.Label(details_window, text=f"{label_text}: {value}", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
+        label.pack(pady=5)
+
+    close_button = tk.Button(details_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=details_window.destroy)
+    close_button.pack(pady=10)
+    close_button.bind("<Enter>", on_enter)
+    close_button.bind("<Leave>", on_leave)
+
 def open_edit_teacher_form(tree, selected_item, teacher_data):
     new_window = tk.Toplevel()
-    new_window.title(GLOBAL_TABLE_NIT)
+    new_window.title(STUDENT_TITLE_EDIT)
     new_window.geometry("300x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
@@ -71,7 +91,7 @@ def on_enter(e):
 def on_leave(e):
     e.widget['background'] = BUTTON_COLOR
 
-def on_click_action(tree, edit_button, delete_button):
+def on_click_action(tree, edit_button, delete_button, details_button):
     selected_item = tree.selection()
     if selected_item:
         selected_teacher = tree.item(selected_item, 'values')
@@ -79,6 +99,11 @@ def on_click_action(tree, edit_button, delete_button):
 
         edit_button.config(state="normal", command=lambda: open_edit_teacher_form(tree, selected_item, selected_teacher))
         delete_button.config(state="normal", command=lambda: confirm_delete_teacher(tree, selected_item, teacher_id))
+        details_button.config(state="normal", command=lambda: open_teacher_details(selected_teacher))
+    else:
+        edit_button.config(state="disabled")
+        delete_button.config(state="disabled")
+        details_button.config(state="disabled")
 
 def open_new_teacher_form(tree):
     new_window = tk.Toplevel()
@@ -102,5 +127,3 @@ def open_new_teacher_form(tree):
 
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
-    
-    
