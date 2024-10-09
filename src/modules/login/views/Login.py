@@ -19,7 +19,7 @@ def create_login_view(window):
 
     label_image = tk.Label(window, image=photo, bg=BACKGROUND_COLOR)
     label_image.image = photo
-    label_image.pack(pady=40) 
+    label_image.pack(pady=20) 
 
     title_font = font.Font(family="Helvetica", size=24, weight="bold")
     subtitle_font = font.Font(family="Helvetica", size=10)
@@ -27,12 +27,8 @@ def create_login_view(window):
     label_title = tk.Label(window, text=GLOBAL_SISTEMA_ESCOLAR_TITLE, bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=title_font)
     label_subtitle = tk.Label(window, text=LOGIN_SISTEMA_ESCOLAR_SUBTITLE, bg=BACKGROUND_COLOR, fg=SUBTITLE_COLOR, font=subtitle_font)
 
-    def adjust_positions():
-        window_width = window.winfo_width()
-        label_title.place(x=window_width // 2, y=220, anchor="center") 
-        label_subtitle.place(x=window_width // 2, y=260, anchor="center")  
-
-    window.after(100, adjust_positions)
+    label_title.pack(pady=0) 
+    label_subtitle.pack(pady=10) 
 
     label_user = tk.Label(window, text=LOGIN_LABEL_USER, bg=BACKGROUND_COLOR, fg=LABEL_COLOR, font=("Helvetica", 12))
     label_user.pack(pady=10)  
