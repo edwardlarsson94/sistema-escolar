@@ -12,7 +12,7 @@ def create_login_view(window):
     window.geometry("500x600")
     window.configure(bg=BACKGROUND_COLOR)
 
-    image_path = "assets/login/logo.png"
+    image_path = "assets/login/logo2.png"
     img = Image.open(image_path)
     img = img.resize((250, 200), Image.Resampling.LANCZOS)
     photo = ImageTk.PhotoImage(img)

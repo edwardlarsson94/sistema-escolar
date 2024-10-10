@@ -27,6 +27,7 @@ GLOBAL_LAST_NAME = "Apellido"
 GLOBAL_AGE = "Edad"
 GLOBAL_SEX = "Sexo"
 GLOBAL_ADDRESS = "Dirección"
-GLOBAL_COURSE = "Año que cursa"
+GLOBAL_COURSE = "Año"
 GLOBAL_PHONE = "Teléfono"
+GLOBAL_SUBJECT = "Asignatura"
 
