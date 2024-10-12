@@ -109,23 +109,19 @@ def confirm_delete_teacher(tree, selected_item, teacher_id):
     button_confirm.pack(side="left", padx=20, pady=20)
     button_cancel.pack(side="right", padx=20, pady=20)
 
-def on_enter(e):
-    e.widget['background'] = BUTTON_COLOR_HOVER
-
-def on_leave(e):
-    e.widget['background'] = BUTTON_COLOR
-
-def on_click_action(tree, edit_button, delete_button, details_button):
+def on_click_action(tree, edit_button, delete_button, details_button, attendance_button):
     selected_item = tree.selection()
     if selected_item:
         selected_teacher = tree.item(selected_item, 'values')
         edit_button.config(state="normal", command=lambda: open_edit_teacher_form(tree, selected_item, selected_teacher))
         delete_button.config(state="normal", command=lambda: confirm_delete_teacher(tree, selected_item, selected_teacher[0]))
         details_button.config(state="normal", command=lambda: open_teacher_details(selected_teacher))
+        attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item, selected_teacher))
     else:
         edit_button.config(state="disabled")
         delete_button.config(state="disabled")
         details_button.config(state="disabled")
+        attendance_button.config(state="disabled")
 
 def open_new_teacher_form(tree):
     new_window = tk.Toplevel()
@@ -168,3 +164,43 @@ def open_new_teacher_form(tree):
 
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
+
+def open_attendance_form(tree, selected_item, teacher_data):
+    new_window = tk.Toplevel()
+    new_window.title("Gestionar Asistencia")
+    new_window.geometry("300x200")
+    new_window.configure(bg=BACKGROUND_COLOR)
+    
+    message_label = tk.Label(new_window, text="¿El profesor asistió hoy?", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
+    message_label.pack(pady=10)
+    
+    def mark_attendance(attended):
+        attendance_status = "Sí" if attended else "No"
+        teacher_data_list = list(teacher_data)
+        teacher_data_list.append(attendance_status)
+        
+        # Actualiza la columna de asistencia
+        tree.item(selected_item, values=teacher_data_list)
+        
+        print(f"Asistencia del profesor {teacher_data[1]} marcada como: {attendance_status}")
+        new_window.destroy()
+    
+    # Botón para "Sí"
+    yes_button = tk.Button(new_window, text="Sí", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
+                           command=lambda: mark_attendance(True))
+    yes_button.pack(side="left", padx=20, pady=20)
+    yes_button.bind("<Enter>", on_enter)
+    yes_button.bind("<Leave>", on_leave)
+    
+    # Botón para "No"
+    no_button = tk.Button(new_window, text="No", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
+                          command=lambda: mark_attendance(False))
+    no_button.pack(side="right", padx=20, pady=20)
+    no_button.bind("<Enter>", on_enter)
+    no_button.bind("<Leave>", on_leave)
+
+def on_enter(e):
+    e.widget['background'] = BUTTON_COLOR_HOVER
+
+def on_leave(e):
+    e.widget['background'] = BUTTON_COLOR

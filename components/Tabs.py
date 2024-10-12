@@ -68,17 +68,17 @@ def create_teacher_tab(notebook):
     edit_button = tk.Button(actions_frame, text=HOME_BUTTON_EDIT, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     details_button = tk.Button(actions_frame, text="Detalles", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     delete_button = tk.Button(actions_frame, text=HOME_BUTTON_DELETE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
-    attendance_button = tk.Button(actions_frame, text="Asistencia", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")  # Nuevo botón
+    attendance_button = tk.Button(actions_frame, text="Asistencia", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
 
-    for button in [edit_button, details_button, delete_button, attendance_button]:  # Añadir el nuevo botón a la lista
+    for button in [edit_button, details_button, delete_button, attendance_button]:
         button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
         button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
 
     edit_button.pack(side="left", padx=10)
     details_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
-    attendance_button.pack(side="left", padx=10)  # Empaquetar el nuevo botón
+    attendance_button.pack(side="left", padx=10)
 
-    bind_row_selection(teacher_tree, edit_button, delete_button, details_button, '', on_teacher_click_action)
+    bind_row_selection(teacher_tree, edit_button, delete_button, details_button, attendance_button, on_teacher_click_action)
 
     return teacher_tab
