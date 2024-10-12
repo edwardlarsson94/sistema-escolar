@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, TITLE_COLOR
+from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR
 from components.Tabs import create_student_tab, create_teacher_tab
+from src.modules.records.Records import create_form
 
 def show_home_view():
     home_window = tk.Tk()
@@ -20,8 +21,16 @@ def show_home_view():
 
     create_student_tab(notebook)
     create_teacher_tab(notebook)
+    create_certificates_tab(notebook)
 
     home_window.mainloop()
+
+def create_certificates_tab(notebook):
+    certificates_tab = ttk.Frame(notebook)
+    notebook.add(certificates_tab, text="Constancias")
+
+    GENERATE_RECORDS_BUTTON = tk.Button(certificates_tab, text="Generar Constancia", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=create_form)
+    GENERATE_RECORDS_BUTTON.pack(pady=20)
 
 def logout(window):
     window.destroy()
