@@ -9,7 +9,7 @@ from components.ButtonLogin import create_login_button
 
 def create_login_view(window):
     window.title(GLOBAL_SYSTEM_SCHOOL_TITLE)
-    window.geometry("500x600")
+    window.geometry("500x700")
     window.configure(bg=BACKGROUND_COLOR)
 
     image_path = "assets/login/logo2.png"
@@ -22,7 +22,7 @@ def create_login_view(window):
     label_image.pack(pady=20) 
 
     title_font = font.Font(family="Helvetica", size=24, weight="bold")
-    subtitle_font = font.Font(family="Helvetica", size=10)
+    subtitle_font = font.Font(family="Helvetica", size=15)
 
     label_title = tk.Label(window, text=GLOBAL_SYSTEM_SCHOOL_TITLE, bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=title_font)
     label_subtitle = tk.Label(window, text=LOGIN_SYSTEM_SCHOOL_SUBTITLE, bg=BACKGROUND_COLOR, fg=SUBTITLE_COLOR, font=subtitle_font)
