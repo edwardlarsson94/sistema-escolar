@@ -133,9 +133,13 @@ def on_leave(e):
 def open_new_student_form(tree):
     new_window = tk.Toplevel()
     new_window.title(GLOBAL_STUDENT_TITLE_ADD)
-    new_window.geometry("400x500")
+    new_window.geometry("1200x400")
     new_window.configure(bg=BACKGROUND_COLOR)
 
+    main_frame = tk.Frame(new_window, bg=BACKGROUND_COLOR)
+    main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+
+    # Lista de campos en el orden que deseas
     fields = [
         ("Cédula", GLOBAL_TABLE_NIT),
         ("Nombres", GLOBAL_TABLE_NAME),
@@ -149,7 +153,7 @@ def open_new_student_form(tree):
         ("Plantel de Procedencia", 'Plantel de Procedencia'),
         ("Trae Materia Pendiente", 'Trae Materia Pendiente'),
         ("¿Cuál?", '¿Cuál?'),
-        ("Dirección", 'Dirección'),
+        ("Dirección", GLOBAL_ADDRESS),
         ("Repite", 'Repite'),
         ("¿Con Cuáles?", '¿Con Cuáles?'),
         ("¿Vive con sus Padres?", '¿Vive con sus Padres?'),
@@ -162,25 +166,36 @@ def open_new_student_form(tree):
 
     entries = {}
 
-    for field, label_text in fields:
-        label = tk.Label(new_window, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.pack(pady=5)
-        entry = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.pack(pady=5)
+    # Organizar los campos en una cuadrícula de tres columnas
+    for i, (field, label_text) in enumerate(fields):
+        row = i // 3  # Cada 3 campos en una nueva fila
+        col = i % 3   # Distribuir en 3 columnas
+
+        label = tk.Label(main_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')  # Etiqueta en la columna impar
+
+        entry = tk.Entry(main_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')  # Entrada en la columna par
+
         entries[field] = entry
 
+    # Botón de guardar
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: add_student(tree, 
-                                                        entries[GLOBAL_TABLE_NIT].get(),
-                                                        entries[GLOBAL_TABLE_NAME].get(),
-                                                        entries[GLOBAL_LAST_NAME].get(),
-                                                        entries[GLOBAL_AGE].get(),
-                                                        entries[GLOBAL_SEX].get(),
-                                                        entries[GLOBAL_ADDRESS].get(),
-                                                        entries[GLOBAL_COURSE].get(),
-                                                        entries[GLOBAL_PHONE].get(),
+                                                        entries["Cédula"].get(),
+                                                        entries["Nombres"].get(),
+                                                        entries["Apellidos"].get(),
+                                                        entries["Edad"].get(),
+                                                        entries["Sexo"].get(),
+                                                        entries["Dirección"].get(),
+                                                        entries["Año que cursa"].get(),
+                                                        entries["Teléfono"].get(),
                                                         new_window))
-    save_button.pack(pady=10)
+    save_button.pack(pady=20)
 
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
+
+    # Configurar columnas para que se expandan uniformemente
+    for i in range(6):  # 3 columnas * 2 (etiqueta + entrada) = 6 columnas
+        main_frame.columnconfigure(i, weight=1)

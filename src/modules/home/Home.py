@@ -6,7 +6,7 @@ from components.Tabs import create_student_tab, create_teacher_tab
 def show_home_view():
     home_window = tk.Tk()
     home_window.title("Home")
-    home_window.geometry("600x500")
+    home_window.geometry("600x600")
     home_window.configure(bg=BACKGROUND_COLOR)
 
     top_frame = tk.Frame(home_window, bg=BACKGROUND_COLOR)
