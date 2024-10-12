@@ -2,13 +2,28 @@ import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 
-def add_student(tree, nit, name, lastName, age, sex, address, course, phone, new_window):
-    tree.insert("", "end", values=(nit, name, lastName, age, sex, address, course, phone))
+def add_student(tree, 
+                   nit, name, lastName, birth_place,
+                   nationality, age, birth_day, birth_month, birth_year,
+                   previous_school, pending_subject, which_subject, address, 
+                   repeating, which_subjects, lives_with_parents, email, religion, sex,
+                   course, phone, new_window):
+    tree.insert("", "end", values=(nit, name, lastName, birth_place, nationality, age, birth_day, birth_month, birth_year,
+                                     previous_school, pending_subject, which_subject, address, 
+                                     repeating, which_subjects, lives_with_parents, email, religion, sex, course, phone))
     print(f"Nuevo estudiante agregado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
     new_window.destroy()
 
-def update_student(tree, selected_item, nit, name, lastName, age, sex, address, course, phone, new_window):
-    tree.item(selected_item, values=(nit, name, lastName, age, sex, address, course, phone))
+def update_student(tree, selected_item, 
+                   nit, name, lastName, birth_place,
+                   nationality, age, birth_day, birth_month, birth_year,
+                   previous_school, pending_subject, which_subject, address, 
+                   repeating, which_subjects, lives_with_parents, email, religion, sex,
+                   course, phone, new_window):
+    
+    tree.item(selected_item, values=(nit, name, lastName, birth_place, nationality, age, birth_day, birth_month, birth_year,
+                                     previous_school, pending_subject, which_subject, address, 
+                                     repeating, which_subjects, lives_with_parents, email, religion, sex, course, phone))
     print(f"Estudiante actualizado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
     new_window.destroy()
 
@@ -22,11 +37,24 @@ def open_student_details(student_data):
         (GLOBAL_TABLE_NIT, student_data[0] if len(student_data) > 0 else "N/A"),
         (GLOBAL_TABLE_NAME, student_data[1] if len(student_data) > 1 else "N/A"),
         (GLOBAL_LAST_NAME, student_data[2] if len(student_data) > 2 else "N/A"),
-        (GLOBAL_AGE, student_data[3] if len(student_data) > 3 else "N/A"),
-        (GLOBAL_SEX, student_data[4] if len(student_data) > 4 else "N/A"),
-        (GLOBAL_ADDRESS, student_data[5] if len(student_data) > 5 else "N/A"),
-        (GLOBAL_COURSE, student_data[6] if len(student_data) > 6 else "N/A"),
-        (GLOBAL_PHONE, student_data[7] if len(student_data) > 7 else "N/A")
+        ('Lugar de Nacimiento', student_data[3] if len(student_data) > 3 else "N/A"),
+        ('Nacionalidad', student_data[4] if len(student_data) > 4 else "N/A"),
+        ('Edad', student_data[5] if len(student_data) > 5 else "N/A"),
+        ('Día', student_data[6] if len(student_data) > 6 else "N/A"),
+        ('Mes', student_data[7] if len(student_data) > 7 else "N/A"),
+        ('Año', student_data[8] if len(student_data) > 8 else "N/A"),
+        ('Plantel de Procedencia', student_data[9] if len(student_data) > 9 else "N/A"),
+        ('Trae Materia Pendiente', student_data[10] if len(student_data) > 10 else "N/A"),
+        ('¿Cuál?', student_data[11] if len(student_data) > 11 else "N/A"),
+        ('Dirección', student_data[12] if len(student_data) > 12 else "N/A"),
+        ('Repite', student_data[13] if len(student_data) > 13 else "N/A"),
+        ('¿Con Cuáles?', student_data[14] if len(student_data) > 14 else "N/A"),
+        ('¿Vive con sus Padres?', student_data[15] if len(student_data) > 15 else "N/A"),
+        ('Correo Electrónico', student_data[16] if len(student_data) > 16 else "N/A"),
+        ('Religión', student_data[17] if len(student_data) > 17 else "N/A"),
+        ('Sexo', student_data[18] if len(student_data) > 18 else "N/A"),
+        ('Año que cursa', student_data[19] if len(student_data) > 19 else "N/A"),
+        (GLOBAL_PHONE, student_data[20] if len(student_data) > 20 else "N/A"),
     ]
 
     for label_text, value in fields:
@@ -47,7 +75,6 @@ def open_edit_student_form(tree, selected_item, student_data):
     main_frame = tk.Frame(new_window, bg=BACKGROUND_COLOR)
     main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
 
-    # Lista de campos en el orden que deseas
     fields = [
         ("Cédula", GLOBAL_TABLE_NIT),
         ("Nombres", GLOBAL_TABLE_NAME),
@@ -55,9 +82,9 @@ def open_edit_student_form(tree, selected_item, student_data):
         ("Lugar de Nacimiento", 'Lugar de Nacimiento'),
         ("Nacionalidad", 'Nacionalidad'),
         ("Edad", GLOBAL_AGE),
-        ("Día de Nacimiento", "Día"),
-        ("Mes de Nacimiento", "Mes"),
-        ("Año de Nacimiento", "Año"),
+        ("Día de Nacimiento", "Día de Nacimiento"),
+        ("Mes de Nacimiento", "Mes de Nacimiento"),
+        ("Año de Nacimiento", "Año de Nacimiento"),
         ("Plantel de Procedencia", 'Plantel de Procedencia'),
         ("Trae Materia Pendiente", 'Trae Materia Pendiente'),
         ("¿Cuál?", '¿Cuál?'),
@@ -76,8 +103,8 @@ def open_edit_student_form(tree, selected_item, student_data):
 
     # Organizar los campos en una cuadrícula de tres columnas
     for i, (field, label_text) in enumerate(fields):
-        row = i // 3  # Cada tres campos comenzamos una nueva fila
-        col = i % 3   # Usamos el módulo para distribuir en 3 columnas
+        row = i // 3  # Cada tres campos en una nueva fila
+        col = i % 3   # Distribuir en 3 columnas
 
         label = tk.Label(main_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
@@ -90,32 +117,35 @@ def open_edit_student_form(tree, selected_item, student_data):
 
     # Botón de guardar
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
-                            command=lambda: update_student(tree, selected_item, 
-                                                           entries["Cédula"].get(),
-                                                           entries["Nombres"].get(),
-                                                           entries["Apellidos"].get(),
-                                                           entries["Lugar de Nacimiento"].get(),
-                                                           entries["Nacionalidad"].get(),
-                                                           entries["Edad"].get(),
-                                                           entries["Día de Nacimiento"].get(),
-                                                           entries["Mes de Nacimiento"].get(),
-                                                           entries["Año de Nacimiento"].get(),
-                                                           entries["Plantel de Procedencia"].get(),
-                                                           entries["Trae Materia Pendiente"].get(),
-                                                           entries["¿Cuál?"].get(),
-                                                           entries["Dirección"].get(),
-                                                           entries["Repite"].get(),
-                                                           entries["¿Con Cuáles?"].get(),
-                                                           entries["¿Vive con sus Padres?"].get(),
-                                                           entries["Correo Electrónico"].get(),
-                                                           entries["Religión"].get(),
-                                                           entries["Sexo"].get(),
-                                                           entries["Año que cursa"].get(),
-                                                           entries["Teléfono"].get(),
-                                                           new_window))
+                            command=lambda: update_student(
+                                tree, selected_item, 
+                                entries["Cédula"].get(),
+                                entries["Nombres"].get(),
+                                entries["Apellidos"].get(),
+                                entries["Lugar de Nacimiento"].get(),
+                                entries["Nacionalidad"].get(),
+                                entries["Edad"].get(),
+                                entries["Día de Nacimiento"].get(),
+                                entries["Mes de Nacimiento"].get(),
+                                entries["Año de Nacimiento"].get(),
+                                entries["Plantel de Procedencia"].get(),
+                                entries["Trae Materia Pendiente"].get(),
+                                entries["¿Cuál?"].get(),
+                                entries["Dirección"].get(),
+                                entries["Repite"].get(),
+                                entries["¿Con Cuáles?"].get(),
+                                entries["¿Vive con sus Padres?"].get(),
+                                entries["Correo Electrónico"].get(),
+                                entries["Religión"].get(),
+                                entries["Sexo"].get(),
+                                entries["Año que cursa"].get(),
+                                entries["Teléfono"].get(),
+                                new_window))
+
     save_button.pack(pady=20)
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
+
 
     # Configurar columnas para que se expandan uniformemente
     for i in range(6):  # 3 columnas * 2 (etiqueta + entrada) = 6 columnas
@@ -226,9 +256,22 @@ def open_new_student_form(tree):
                                                         entries["Cédula"].get(),
                                                         entries["Nombres"].get(),
                                                         entries["Apellidos"].get(),
+                                                        entries["Lugar de Nacimiento"].get(),
+                                                        entries["Nacionalidad"].get(),
                                                         entries["Edad"].get(),
-                                                        entries["Sexo"].get(),
+                                                        entries["Día de Nacimiento"].get(),
+                                                        entries["Mes de Nacimiento"].get(),
+                                                        entries["Año de Nacimiento"].get(),
+                                                        entries["Plantel de Procedencia"].get(),
+                                                        entries["Trae Materia Pendiente"].get(),
+                                                        entries["¿Cuál?"].get(),
                                                         entries["Dirección"].get(),
+                                                        entries["Repite"].get(),
+                                                        entries["¿Con Cuáles?"].get(),
+                                                        entries["¿Vive con sus Padres?"].get(),
+                                                        entries["Correo Electrónico"].get(),
+                                                        entries["Religión"].get(),
+                                                        entries["Sexo"].get(),
                                                         entries["Año que cursa"].get(),
                                                         entries["Teléfono"].get(),
                                                         new_window))

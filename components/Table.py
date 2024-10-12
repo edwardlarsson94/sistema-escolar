@@ -15,7 +15,7 @@ def create_student_table(window):
     style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background=BACKGROUND_COLOR, foreground=BUTTON_COLOR_NEW)
 
     columns = (
-        "cedula", "nombres", "apellidos", "telefono"
+        "cedula", "nombres", "apellidos"
     )
 
     tree = ttk.Treeview(window, columns=columns, show="headings", height=8)
@@ -24,8 +24,7 @@ def create_student_table(window):
     column_headings = [
         (GLOBAL_TABLE_NIT, "cedula"),
         (GLOBAL_TABLE_NAME, "nombres"),
-        (GLOBAL_LAST_NAME, "apellidos"),
-        (GLOBAL_PHONE, "telefono")
+        (GLOBAL_LAST_NAME, "apellidos")
     ]
 
     for text, column in column_headings:
@@ -37,10 +36,12 @@ def create_student_table(window):
 def populate_table(tree):
     students = [
         {
-            "cedula": "12345678", "nombres": "Juan", "apellidos": "Pérez",
-             "telefono": "555-1234"
+            "cedula": "12345678", "nombres": "Juan", "apellidos": "Pérez", "lugar_nacimiento": "Ciudad", 
+            "nacionalidad": "Mexicana", "edad": "16", "dia_nacimiento": "10", "mes_nacimiento": "Mayo", 
+            "año_nacimiento": "2005", "plantel_procedencia": "Escuela ABC", "materia_pendiente": "No", "cual": "", 
+            "direccion": "Calle Falsa 123", "repite": "No", "cuales_materias": "", "vive_con_padres": "Sí", 
+            "email": "juan@example.com", "religion": "Católica", "sexo": "Masculino", "año_cursa": "Segundo", "telefono": "555-1234",
         },
-        # Puedes agregar más estudiantes aquí siguiendo el mismo formato
     ]
 
     for student in students:
