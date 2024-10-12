@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox 
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 from src.modules.records.Records import generate_certificate
@@ -82,8 +83,9 @@ def add_student(tree,
                                      address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
                                      in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized
                                   ))
-    print(f"Nuevo estudiante agregado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
-    new_window.destroy()
+    messagebox.showinfo("Registro Exitoso", f"El estudiante con cédula {nit} ha sido registrado con éxito.")
+    
+    new_window.destroy() 
 
 def update_student(tree, selected_item,
                     
@@ -113,7 +115,7 @@ def update_student(tree, selected_item,
                                         in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized
                                         
                                         ))
-    print(f"Estudiante actualizado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
+    messagebox.showinfo("Edición Exitosa", f"El estudiante con cédula {nit} ha sido editado con éxito.")
     new_window.destroy()
 
 def confirm_delete_student(tree, selected_item, student_id):
@@ -128,7 +130,7 @@ def confirm_delete_student(tree, selected_item, student_id):
 
     def delete_confirmed():
         tree.delete(selected_item)
-        print(f"Estudiante con cédula {student_id} borrado")
+        messagebox.showinfo("Borrado Exitoso", f"El estudiante con cédula {student_id} ha sido borrado con éxito.")
         new_window.destroy()
 
     button_confirm = tk.Button(new_window, text=GLOBAL_BUTTON_CONFIRM, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 

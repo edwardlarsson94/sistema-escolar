@@ -1,6 +1,7 @@
 from tkinter import Toplevel, Label, Button, StringVar, OptionMenu, Entry
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from tkinter import messagebox 
 from datetime import datetime
 
 def generate_certificate(certificate_type, first_name, last_name, id_number, year, behavior):
@@ -103,7 +104,7 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
     c.showPage()
     c.save()
 
-    print(f"Certificate of {certificate_type} generated successfully: {file_name}")
+    messagebox.showinfo("Generación Exitosa", f"El certificado de {certificate_type} ha sido generado con éxito.")
 
 def create_form():
     def generate():
