@@ -3,6 +3,40 @@ from tkinter import ttk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 
+fields = [
+    ("Cédula", GLOBAL_TABLE_NIT),
+    ("Nombres", GLOBAL_TABLE_NAME),
+    ("Apellidos", GLOBAL_LAST_NAME),
+    ("Lugar de Nacimiento", 'Lugar de Nacimiento'),
+    ("Nacionalidad", 'Nacionalidad'),
+    ("Edad", GLOBAL_AGE),
+    ("Día de Nacimiento", "Día de Nacimiento"),
+    ("Mes de Nacimiento", "Mes de Nacimiento"),
+    ("Año de Nacimiento", "Año de Nacimiento"),
+    ("Plantel de Procedencia", 'Plantel de Procedencia'),
+    ("Trae Materia Pendiente", 'Trae Materia Pendiente'),
+    ("¿Cuál?", '¿Cuál?'),
+    ("Dirección", GLOBAL_ADDRESS),
+    ("Repite", 'Repite'),
+    ("¿Con Cuáles?", '¿Con Cuáles?'),
+    ("¿Vive con sus Padres?", '¿Vive con sus Padres?'),
+    ("Correo Electrónico", 'Correo Electrónico'),
+    ("Religión", 'Religión'),
+    ("Sexo", GLOBAL_SEX),
+    ("Año que cursa", GLOBAL_COURSE),
+    ("Teléfono", GLOBAL_PHONE)
+]
+
+family_fields = [
+    ("Nombre del Familiar", "Nombre Familiar"),
+    ("Cédula del Familiar", "Cédula Familiar")
+]
+
+representative_fields = [
+    ("Nombre del Representante", "Nombre Representante"),
+    ("Cédula del Representante", "Cédula Representante")
+]
+
 def add_student(tree, nit, name, lastName, birth_place,
                 nationality, age, birth_day, birth_month, birth_year,
                 previous_school, pending_subject, which_subject, address, 
@@ -20,23 +54,24 @@ def update_student(tree, selected_item,
                    nationality, age, birth_day, birth_month, birth_year,
                    previous_school, pending_subject, which_subject, address, 
                    repeating, which_subjects, lives_with_parents, email, religion, sex,
-                   course, phone, new_window):
+                   course, phone, family_name, family_nit, representative_name, representative_nit, new_window):
     
     tree.item(selected_item, values=(nit, name, lastName, birth_place, nationality, age, birth_day, birth_month, birth_year,
                                      previous_school, pending_subject, which_subject, address, 
-                                     repeating, which_subjects, lives_with_parents, email, religion, sex, course, phone))
+                                     repeating, which_subjects, lives_with_parents, email, religion, sex, course, phone, family_name, family_nit, representative_name, representative_nit))
     print(f"Estudiante actualizado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
     new_window.destroy()
 
 def open_student_details(student_data):
     details_window = tk.Toplevel()
     details_window.title("Detalles del Estudiante")
-    details_window.geometry("900x400")
+    details_window.geometry("900x500")  # Ajuste de altura para los nuevos campos
     details_window.configure(bg=BACKGROUND_COLOR)
 
     main_frame = tk.Frame(details_window, bg=BACKGROUND_COLOR)
     main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
 
+    # Campos del estudiante, familiar y representante
     fields = [
         (GLOBAL_TABLE_NIT, student_data[0] if len(student_data) > 0 else "N/A"),
         (GLOBAL_TABLE_NAME, student_data[1] if len(student_data) > 1 else "N/A"),
@@ -59,6 +94,10 @@ def open_student_details(student_data):
         ('Sexo', student_data[18] if len(student_data) > 18 else "N/A"),
         ('Año que cursa', student_data[19] if len(student_data) > 19 else "N/A"),
         (GLOBAL_PHONE, student_data[20] if len(student_data) > 20 else "N/A"),
+        ('Nombre del Familiar', student_data[21] if len(student_data) > 21 else "N/A"),
+        ('Cédula del Familiar', student_data[22] if len(student_data) > 22 else "N/A"),
+        ('Nombre del Representante', student_data[23] if len(student_data) > 23 else "N/A"),
+        ('Cédula del Representante', student_data[24] if len(student_data) > 24 else "N/A"),
     ]
 
     # Organizar los campos en una cuadrícula de tres columnas
@@ -84,40 +123,19 @@ def open_student_details(student_data):
 def open_edit_student_form(tree, selected_item, student_data):
     new_window = tk.Toplevel()
     new_window.title(STUDENT_TITLE_EDIT)
-    new_window.geometry("1200x400")
+    new_window.geometry("1200x500")  # Ajuste de altura para los nuevos campos
     new_window.configure(bg=BACKGROUND_COLOR)
 
     main_frame = tk.Frame(new_window, bg=BACKGROUND_COLOR)
     main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
 
-    fields = [
-        ("Cédula", GLOBAL_TABLE_NIT),
-        ("Nombres", GLOBAL_TABLE_NAME),
-        ("Apellidos", GLOBAL_LAST_NAME),
-        ("Lugar de Nacimiento", 'Lugar de Nacimiento'),
-        ("Nacionalidad", 'Nacionalidad'),
-        ("Edad", GLOBAL_AGE),
-        ("Día de Nacimiento", "Día de Nacimiento"),
-        ("Mes de Nacimiento", "Mes de Nacimiento"),
-        ("Año de Nacimiento", "Año de Nacimiento"),
-        ("Plantel de Procedencia", 'Plantel de Procedencia'),
-        ("Trae Materia Pendiente", 'Trae Materia Pendiente'),
-        ("¿Cuál?", '¿Cuál?'),
-        ("Dirección", GLOBAL_ADDRESS),
-        ("Repite", 'Repite'),
-        ("¿Con Cuáles?", '¿Con Cuáles?'),
-        ("¿Vive con sus Padres?", '¿Vive con sus Padres?'),
-        ("Correo Electrónico", 'Correo Electrónico'),
-        ("Religión", 'Religión'),
-        ("Sexo", GLOBAL_SEX),
-        ("Año que cursa", GLOBAL_COURSE),
-        ("Teléfono", GLOBAL_PHONE)
-    ]
-
     entries = {}
 
+    # Definir campos para edición
+    edit_fields = fields + family_fields + representative_fields
+
     # Organizar los campos en una cuadrícula de tres columnas
-    for i, (field, label_text) in enumerate(fields):
+    for i, (field, label_text) in enumerate(edit_fields):
         row = i // 3  # Cada tres campos en una nueva fila
         col = i % 3   # Distribuir en 3 columnas
 
@@ -155,12 +173,15 @@ def open_edit_student_form(tree, selected_item, student_data):
                                 entries["Sexo"].get(),
                                 entries["Año que cursa"].get(),
                                 entries["Teléfono"].get(),
+                                entries["Nombre del Familiar"].get(),
+                                entries["Cédula del Familiar"].get(),
+                                entries["Nombre del Representante"].get(),
+                                entries["Cédula del Representante"].get(),
                                 new_window))
 
     save_button.pack(pady=20)
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
-
 
     # Configurar columnas para que se expandan uniformemente
     for i in range(6):  # 3 columnas * 2 (etiqueta + entrada) = 6 columnas
@@ -239,34 +260,11 @@ def open_new_student_form(tree):
     notebook.add(representative_frame, text="Datos del Representante")
 
     # Definir campos para la pestaña de Datos del Estudiante
-    student_fields = [
-        ("Cédula", GLOBAL_TABLE_NIT),
-        ("Nombres", GLOBAL_TABLE_NAME),
-        ("Apellidos", GLOBAL_LAST_NAME),
-        ("Lugar de Nacimiento", 'Lugar de Nacimiento'),
-        ("Nacionalidad", 'Nacionalidad'),
-        ("Edad", GLOBAL_AGE),
-        ("Día de Nacimiento", "Día"),
-        ("Mes de Nacimiento", "Mes"),
-        ("Año de Nacimiento", "Año"),
-        ("Plantel de Procedencia", 'Plantel de Procedencia'),
-        ("Trae Materia Pendiente", 'Trae Materia Pendiente'),
-        ("¿Cuál?", '¿Cuál?'),
-        ("Dirección", GLOBAL_ADDRESS),
-        ("Repite", 'Repite'),
-        ("¿Con Cuáles?", '¿Con Cuáles?'),
-        ("¿Vive con sus Padres?", '¿Vive con sus Padres?'),
-        ("Correo Electrónico", 'Correo Electrónico'),
-        ("Religión", 'Religión'),
-        ("Sexo", GLOBAL_SEX),
-        ("Año que cursa", GLOBAL_COURSE),
-        ("Teléfono", GLOBAL_PHONE)
-    ]
 
     entries = {}
 
     # Crear los campos en la pestaña de Datos del Estudiante
-    for i, (field, label_text) in enumerate(student_fields):
+    for i, (field, label_text) in enumerate(fields):
         row = i // 3  # Cada tres campos en una nueva fila
         col = i % 3   # Distribuir en 3 columnas
 
@@ -277,12 +275,6 @@ def open_new_student_form(tree):
         entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
-    # Definir y crear campos en la pestaña de Datos del Familiar
-    family_fields = [
-        ("Nombre del Familiar", "Nombre Familiar"),
-        ("Cédula del Familiar", "Cédula Familiar")
-    ]
-
     for i, (field, label_text) in enumerate(family_fields):
         label = tk.Label(family_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
         label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
@@ -291,11 +283,6 @@ def open_new_student_form(tree):
         entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
-    # Definir y crear campos en la pestaña de Datos del Representante
-    representative_fields = [
-        ("Nombre del Representante", "Nombre Representante"),
-        ("Cédula del Representante", "Cédula Representante")
-    ]
 
     for i, (field, label_text) in enumerate(representative_fields):
         label = tk.Label(representative_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
