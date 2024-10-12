@@ -38,6 +38,8 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
         title = "Constancia de Estudio"
     elif certificate_type == "Good Behavior":
         title = "Constancia de Buen Comportamiento"
+    else:
+        title = "Constancia"
 
     c.setFont("Helvetica-Bold", 16)
     text_width = c.stringWidth(title, "Helvetica-Bold", 16)
@@ -59,7 +61,7 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
         """
     elif certificate_type == "Good Behavior":
         text = f"""
-        Se hace constar que la estudiante {full_name}, con cédula de ciudadanía 
+        Se hace constar que el estudiante {full_name}, con cédula de ciudadanía 
         número {id_number}, ha cursado sus estudios en el Liceo Nacional Jose Felix Ribas
         desde {current_date} hasta la fecha. Durante todo este tiempo, el estudiante ha
         demostrado un comportamiento ejemplar, caracterizado por su respeto hacia los
@@ -68,6 +70,8 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
         Por lo tanto, se le extiende la presente constancia como reconocimiento
         a su buen desempeño y conducta.
         """
+    else:
+        text = f"Este es un certificado genérico para {full_name}."
 
     lines = text.splitlines()
     text_start_y = header_start_y - (len(header_lines) * line_height) - 150 
