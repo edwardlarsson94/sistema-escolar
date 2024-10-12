@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 
@@ -218,14 +219,27 @@ def on_leave(e):
 def open_new_student_form(tree):
     new_window = tk.Toplevel()
     new_window.title(GLOBAL_STUDENT_TITLE_ADD)
-    new_window.geometry("1200x400")
+    new_window.geometry("1200x425")
     new_window.configure(bg=BACKGROUND_COLOR)
 
-    main_frame = tk.Frame(new_window, bg=BACKGROUND_COLOR)
-    main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+    # Crear un Notebook (pestañas)
+    notebook = ttk.Notebook(new_window)
+    notebook.pack(expand=True, fill='both', padx=20, pady=20)
 
-    # Lista de campos en el orden que deseas
-    fields = [
+    # Pestaña de datos del estudiante
+    student_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(student_frame, text="Datos del Estudiante")
+
+    # Pestaña de datos del familiar
+    family_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(family_frame, text="Datos del Familiar")
+
+    # Pestaña de datos del representante
+    representative_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(representative_frame, text="Datos del Representante")
+
+    # Definir campos para la pestaña de Datos del Estudiante
+    student_fields = [
         ("Cédula", GLOBAL_TABLE_NIT),
         ("Nombres", GLOBAL_TABLE_NAME),
         ("Apellidos", GLOBAL_LAST_NAME),
@@ -251,17 +265,44 @@ def open_new_student_form(tree):
 
     entries = {}
 
-    # Organizar los campos en una cuadrícula de tres columnas
-    for i, (field, label_text) in enumerate(fields):
-        row = i // 3  # Cada 3 campos en una nueva fila
+    # Crear los campos en la pestaña de Datos del Estudiante
+    for i, (field, label_text) in enumerate(student_fields):
+        row = i // 3  # Cada tres campos en una nueva fila
         col = i % 3   # Distribuir en 3 columnas
 
-        label = tk.Label(main_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')  # Etiqueta en la columna impar
+        label = tk.Label(student_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
-        entry = tk.Entry(main_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')  # Entrada en la columna par
+        entry = tk.Entry(student_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
+        entries[field] = entry
 
+    # Definir y crear campos en la pestaña de Datos del Familiar
+    family_fields = [
+        ("Nombre del Familiar", "Nombre Familiar"),
+        ("Cédula del Familiar", "Cédula Familiar")
+    ]
+
+    for i, (field, label_text) in enumerate(family_fields):
+        label = tk.Label(family_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+
+        entry = tk.Entry(family_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+        entries[field] = entry
+
+    # Definir y crear campos en la pestaña de Datos del Representante
+    representative_fields = [
+        ("Nombre del Representante", "Nombre Representante"),
+        ("Cédula del Representante", "Cédula Representante")
+    ]
+
+    for i, (field, label_text) in enumerate(representative_fields):
+        label = tk.Label(representative_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+
+        entry = tk.Entry(representative_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
     # Botón de guardar
@@ -288,12 +329,17 @@ def open_new_student_form(tree):
                                                         entries["Sexo"].get(),
                                                         entries["Año que cursa"].get(),
                                                         entries["Teléfono"].get(),
+                                                        entries["Nombre del Familiar"].get(),
+                                                        entries["Cédula del Familiar"].get(),
+                                                        entries["Nombre del Representante"].get(),
+                                                        entries["Cédula del Representante"].get(),
                                                         new_window))
     save_button.pack(pady=20)
-
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
 
-    # Configurar columnas para que se expandan uniformemente
-    for i in range(6):  # 3 columnas * 2 (etiqueta + entrada) = 6 columnas
-        main_frame.columnconfigure(i, weight=1)
+def on_enter(e):
+    e.widget['background'] = BUTTON_COLOR_HOVER
+
+def on_leave(e):
+    e.widget['background'] = BUTTON_COLOR
