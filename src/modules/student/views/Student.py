@@ -28,39 +28,90 @@ fields = [
 ]
 
 family_fields = [
-    ("Nombre del Familiar", "Nombre Familiar"),
-    ("Cédula del Familiar", "Cédula Familiar")
+    ("Nombre del Padre", "Nombre del Padre"),
+    ("Nombre de la Madre", "Nombre de la Madre"),
+    ("Cédula del Padre", "Cédula del Padre"),
+    ("Cédula de la Madre", "Cédula de la Madre"),
+    ("Teléfono del Padre", "Teléfono del Padre"),
+    ("Teléfono de la Madre", "Teléfono de la Madre"),
+    ("Oficio del Padre", "Oficio del Padre"),
+    ("Oficio de la Madre", "Oficio de la Madre"),
+    ("Correo del Padre", "Correo del Padre"),
+    ("Correo de la Madre", "Correo de la Madre")
 ]
 
 representative_fields = [
     ("Nombre del Representante", "Nombre Representante"),
-    ("Cédula del Representante", "Cédula Representante")
+    ("Cédula del Representante", "Cédula Representante"),
+    ("Oficio del Representante", "Oficio del Representante"),
+    ("Parentesco con el Alumno", "Parentesco con el Alumno"),
+    ("Direccion del Domicilio", "Direccion del Domicilio"),
+    ("Teléfono de Habitación", "Teléfono de Habitación"),
+    ("Teléfono de Trabajo", "Teléfono de Trabajo"),
+    ("Teléfono de Celular", "Teléfono de Celular"),
+    ("Correo Electrónico", "Correo Electrónico"),
+    ("En caso de que no pueda acudir a reunion o entrega de boletin autoriza a", "En caso de que no pueda acudir a reunion o entrega de boletin autoriza a"),
+    ("Cedula del autorizado", "Cedula del autorizado"),
 ]
 
 # Actions
 
-def add_student(tree, nit, name, lastName, birth_place,
-                nationality, age, birth_day, birth_month, birth_year,
-                previous_school, pending_subject, which_subject, address, 
-                repeating, which_subjects, lives_with_parents, email, religion, sex,
-                course, phone, family_name, family_nit, representative_name, representative_nit, new_window):
+def add_student(tree,
+                nit, name, lastName, birth_place,nationality, age, birth_day,
+                birth_month, birth_year, previous_school, pending_subject, which_subject, address,repeating,
+                which_subjects, lives_with_parents, email, religion, sex,course, phone, 
 
-    tree.insert("", "end", values=(nit, name, lastName, birth_place, nationality, age, birth_day, birth_month, birth_year,
-                                     previous_school, pending_subject, which_subject, address, 
-                                     repeating, which_subjects, lives_with_parents, email, religion, sex, course, phone, family_name, family_nit, representative_name, representative_nit))
+                name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
+                phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
+
+                name_of_representative, nit_of_representative, office_of_representative, parentesco_with_alumno, 
+                address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
+                in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized,
+
+                new_window):
+
+    tree.insert("", "end", values=(  nit, name, lastName, birth_place, nationality, age, birth_day, 
+                                     birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating, 
+                                     which_subjects, lives_with_parents, email, religion, sex, course, phone,
+
+                                     name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
+                                     phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
+
+                                     name_of_representative, nit_of_representative, office_of_representative, parentesco_with_alumno, 
+                                     address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
+                                     in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized
+                                  ))
     print(f"Nuevo estudiante agregado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
     new_window.destroy()
 
-def update_student(tree, selected_item, 
-                   nit, name, lastName, birth_place,
-                   nationality, age, birth_day, birth_month, birth_year,
-                   previous_school, pending_subject, which_subject, address, 
-                   repeating, which_subjects, lives_with_parents, email, religion, sex,
-                   course, phone, family_name, family_nit, representative_name, representative_nit, new_window):
+def update_student(tree, selected_item,
+                    
+                   nit, name, lastName, birth_place, nationality, age, birth_day,
+                   birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
+                   which_subjects, lives_with_parents, email, religion, sex, course, phone,
+                   
+                   name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
+                   phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
+
+                   name_of_representative, nit_of_representative, office_of_representative, parentesco_with_alumno, 
+                   address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
+                   in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized,
+
+                   new_window):
     
-    tree.item(selected_item, values=(nit, name, lastName, birth_place, nationality, age, birth_day, birth_month, birth_year,
-                                     previous_school, pending_subject, which_subject, address, 
-                                     repeating, which_subjects, lives_with_parents, email, religion, sex, course, phone, family_name, family_nit, representative_name, representative_nit))
+    tree.item(selected_item, values=(
+                                        nit, name, lastName, birth_place, nationality, age, birth_day, 
+                                        birth_month, birth_year,previous_school, pending_subject, which_subject, address, repeating, 
+                                        which_subjects, lives_with_parents, email, religion, sex, course, phone,
+
+                                        name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
+                                        phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
+
+                                        name_of_representative, nit_of_representative, office_of_representative, parentesco_with_alumno, 
+                                        address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
+                                        in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized
+                                        
+                                        ))
     print(f"Estudiante actualizado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
     new_window.destroy()
 
@@ -152,6 +203,7 @@ def open_new_student_form(tree):
     # Botón de guardar
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: add_student(tree, 
+                                                        
                                                         entries["Cédula"].get(),
                                                         entries["Nombres"].get(),
                                                         entries["Apellidos"].get(),
@@ -173,10 +225,30 @@ def open_new_student_form(tree):
                                                         entries["Sexo"].get(),
                                                         entries["Año que cursa"].get(),
                                                         entries["Teléfono"].get(),
-                                                        entries["Nombre del Familiar"].get(),
-                                                        entries["Cédula del Familiar"].get(),
+
+                                                        entries["Nombre del Padre"].get(),
+                                                        entries["Nombre de la Madre"].get(),
+                                                        entries["Cédula del Padre"].get(),
+                                                        entries["Cédula de la Madre"].get(),
+                                                        entries["Teléfono del Padre"].get(),
+                                                        entries["Teléfono de la Madre"].get(),
+                                                        entries["Oficio del Padre"].get(),
+                                                        entries["Oficio de la Madre"].get(),
+                                                        entries["Correo del Padre"].get(),
+                                                        entries["Correo de la Madre"].get(),
+
                                                         entries["Nombre del Representante"].get(),
-                                                        entries["Cédula del Representante"].get(),
+                                                        entries["Cédula del Representante"].get(),                                                        
+                                                        entries["Oficio del Representante"].get(),
+                                                        entries["Parentesco con el Alumno"].get(),
+                                                        entries["Direccion del Domicilio"].get(),
+                                                        entries["Teléfono de Habitación"].get(),
+                                                        entries["Teléfono de Trabajo"].get(),
+                                                        entries["Teléfono de Celular"].get(),
+                                                        entries["Correo Electrónico"].get(),
+                                                        entries["En caso de que no pueda acudir a reunion o entrega de boletin autoriza a"].get(),
+                                                        entries["Cedula del autorizado"].get(),
+
                                                         new_window))
     save_button.pack(pady=20)
     save_button.bind("<Enter>", on_enter)
@@ -263,10 +335,30 @@ def open_edit_student_form(tree, selected_item, student_data):
                                 entries["Sexo"].get(),
                                 entries["Año que cursa"].get(),
                                 entries["Teléfono"].get(),
-                                entries["Nombre del Familiar"].get(),
-                                entries["Cédula del Familiar"].get(),
-                                entries["Nombre del Representante"].get(),
-                                entries["Cédula del Representante"].get(),
+
+                                entries["Nombre del Padre"].get(),
+                                entries["Nombre de la Madre"].get(),
+                                entries["Cédula del Padre"].get(),
+                                entries["Cédula de la Madre"].get(),
+                                entries["Teléfono del Padre"].get(),
+                                entries["Teléfono de la Madre"].get(),
+                                entries["Oficio del Padre"].get(),
+                                entries["Oficio de la Madre"].get(),
+                                entries["Correo del Padre"].get(),                                
+                                entries["Correo de la Madre"].get(),
+                                
+                                entries["Nombre del Representante"].get(),                                
+                                entries["Cédula del Representante"].get(),                                
+                                entries["Oficio del Representante"].get(),
+                                entries["Parentesco con el Alumno"].get(),
+                                entries["Direccion del Domicilio"].get(),
+                                entries["Teléfono de Habitación"].get(),
+                                entries["Teléfono de Trabajo"].get(),
+                                entries["Teléfono de Celular"].get(),
+                                entries["Correo Electrónico"].get(),
+                                entries["En caso de que no pueda acudir a reunion o entrega de boletin autoriza a"].get(),
+                                entries["Cedula del autorizado"].get(),
+
                                 new_window))
 
     save_button.pack(pady=20)
