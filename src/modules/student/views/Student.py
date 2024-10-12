@@ -65,87 +65,113 @@ def update_student(tree, selected_item,
 def open_student_details(student_data):
     details_window = tk.Toplevel()
     details_window.title("Detalles del Estudiante")
-    details_window.geometry("900x500")  # Ajuste de altura para los nuevos campos
+    details_window.geometry("600x500")
     details_window.configure(bg=BACKGROUND_COLOR)
 
-    main_frame = tk.Frame(details_window, bg=BACKGROUND_COLOR)
-    main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+    notebook = ttk.Notebook(details_window)
+    notebook.pack(expand=True, fill='both', padx=20, pady=20)
 
-    # Campos del estudiante, familiar y representante
-    fields = [
-        (GLOBAL_TABLE_NIT, student_data[0] if len(student_data) > 0 else "N/A"),
-        (GLOBAL_TABLE_NAME, student_data[1] if len(student_data) > 1 else "N/A"),
-        (GLOBAL_LAST_NAME, student_data[2] if len(student_data) > 2 else "N/A"),
-        ('Lugar de Nacimiento', student_data[3] if len(student_data) > 3 else "N/A"),
-        ('Nacionalidad', student_data[4] if len(student_data) > 4 else "N/A"),
-        ('Edad', student_data[5] if len(student_data) > 5 else "N/A"),
-        ('Día', student_data[6] if len(student_data) > 6 else "N/A"),
-        ('Mes', student_data[7] if len(student_data) > 7 else "N/A"),
-        ('Año', student_data[8] if len(student_data) > 8 else "N/A"),
-        ('Plantel de Procedencia', student_data[9] if len(student_data) > 9 else "N/A"),
-        ('Trae Materia Pendiente', student_data[10] if len(student_data) > 10 else "N/A"),
-        ('¿Cuál?', student_data[11] if len(student_data) > 11 else "N/A"),
-        ('Dirección', student_data[12] if len(student_data) > 12 else "N/A"),
-        ('Repite', student_data[13] if len(student_data) > 13 else "N/A"),
-        ('¿Con Cuáles?', student_data[14] if len(student_data) > 14 else "N/A"),
-        ('¿Vive con sus Padres?', student_data[15] if len(student_data) > 15 else "N/A"),
-        ('Correo Electrónico', student_data[16] if len(student_data) > 16 else "N/A"),
-        ('Religión', student_data[17] if len(student_data) > 17 else "N/A"),
-        ('Sexo', student_data[18] if len(student_data) > 18 else "N/A"),
-        ('Año que cursa', student_data[19] if len(student_data) > 19 else "N/A"),
-        (GLOBAL_PHONE, student_data[20] if len(student_data) > 20 else "N/A"),
-        ('Nombre del Familiar', student_data[21] if len(student_data) > 21 else "N/A"),
-        ('Cédula del Familiar', student_data[22] if len(student_data) > 22 else "N/A"),
-        ('Nombre del Representante', student_data[23] if len(student_data) > 23 else "N/A"),
-        ('Cédula del Representante', student_data[24] if len(student_data) > 24 else "N/A"),
-    ]
+    # Pestaña de datos del estudiante
+    student_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(student_frame, text="Datos del Estudiante")
 
-    # Organizar los campos en una cuadrícula de tres columnas
-    for i, (label_text, value) in enumerate(fields):
-        row = i // 3  # Cada tres campos en una nueva fila
-        col = i % 3   # Distribuir en 3 columnas
+    # Pestaña de datos del familiar
+    family_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(family_frame, text="Datos del Familiar")
 
-        label = tk.Label(main_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
+    # Pestaña de datos del representante
+    representative_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(representative_frame, text="Datos del Representante")
+
+    # Mostrar campos en la pestaña de Datos del Estudiante
+    for i, (field, label_text) in enumerate(fields):
+        row = i // 3
+        col = i % 3
+
+        label = tk.Label(student_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
-        value_label = tk.Label(main_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
+        value = student_data[i] if i < len(student_data) else "N/A"
+        value_label = tk.Label(student_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
         value_label.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
+
+    # Mostrar campos en la pestaña de Datos del Familiar
+    for i, (field, label_text) in enumerate(family_fields):
+        label = tk.Label(family_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
+        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+
+        value = student_data[len(fields) + i] if len(student_data) > len(fields) + i else "N/A"
+        value_label = tk.Label(family_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
+        value_label.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+
+    # Mostrar campos en la pestaña de Datos del Representante
+    for i, (field, label_text) in enumerate(representative_fields):
+        label = tk.Label(representative_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
+        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+
+        value = student_data[len(fields) + len(family_fields) + i] if len(student_data) > len(fields) + len(family_fields) + i else "N/A"
+        value_label = tk.Label(representative_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
+        value_label.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
 
     close_button = tk.Button(details_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=details_window.destroy)
     close_button.pack(pady=10)
     close_button.bind("<Enter>", on_enter)
     close_button.bind("<Leave>", on_leave)
 
-    # Configurar columnas para que se expandan uniformemente
-    for i in range(6):  # 3 columnas * 2 (etiqueta + valor) = 6 columnas
-        main_frame.columnconfigure(i, weight=1)
-
 def open_edit_student_form(tree, selected_item, student_data):
     new_window = tk.Toplevel()
     new_window.title(STUDENT_TITLE_EDIT)
-    new_window.geometry("1200x500")  # Ajuste de altura para los nuevos campos
+    new_window.geometry("1200x500")
     new_window.configure(bg=BACKGROUND_COLOR)
 
-    main_frame = tk.Frame(new_window, bg=BACKGROUND_COLOR)
-    main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+    notebook = ttk.Notebook(new_window)
+    notebook.pack(expand=True, fill='both', padx=20, pady=20)
+
+    # Pestaña de datos del estudiante
+    student_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(student_frame, text="Datos del Estudiante")
+
+    # Pestaña de datos del familiar
+    family_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(family_frame, text="Datos del Familiar")
+
+    # Pestaña de datos del representante
+    representative_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
+    notebook.add(representative_frame, text="Datos del Representante")
 
     entries = {}
 
-    # Definir campos para edición
-    edit_fields = fields + family_fields + representative_fields
+    # Organizar los campos en la pestaña de Datos del Estudiante
+    for i, (field, label_text) in enumerate(fields):
+        row = i // 3
+        col = i % 3
 
-    # Organizar los campos en una cuadrícula de tres columnas
-    for i, (field, label_text) in enumerate(edit_fields):
-        row = i // 3  # Cada tres campos en una nueva fila
-        col = i % 3   # Distribuir en 3 columnas
-
-        label = tk.Label(main_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label = tk.Label(student_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
-        entry = tk.Entry(main_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        entry = tk.Entry(student_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
         entry.insert(0, student_data[i] if i < len(student_data) else "")
         entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
+        entries[field] = entry
 
+    # Organizar los campos en la pestaña de Datos del Familiar
+    for i, (field, label_text) in enumerate(family_fields):
+        label = tk.Label(family_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+
+        entry = tk.Entry(family_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        entry.insert(0, student_data[len(fields) + i] if len(student_data) > len(fields) + i else "")
+        entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+        entries[field] = entry
+
+    # Organizar los campos en la pestaña de Datos del Representante
+    for i, (field, label_text) in enumerate(representative_fields):
+        label = tk.Label(representative_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+
+        entry = tk.Entry(representative_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        entry.insert(0, student_data[len(fields) + len(family_fields) + i] if len(student_data) > len(fields) + len(family_fields) + i else "")
+        entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
     # Botón de guardar
@@ -182,10 +208,6 @@ def open_edit_student_form(tree, selected_item, student_data):
     save_button.pack(pady=20)
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
-
-    # Configurar columnas para que se expandan uniformemente
-    for i in range(6):  # 3 columnas * 2 (etiqueta + entrada) = 6 columnas
-        main_frame.columnconfigure(i, weight=1)
 
 def on_click_action(tree, edit_button, delete_button, details_button):
     selected_item = tree.selection()
