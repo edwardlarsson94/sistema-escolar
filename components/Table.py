@@ -1,23 +1,15 @@
 import tkinter as tk
 from tkinter import ttk
 from constants.Colors import BACKGROUND_COLOR, TITLE_COLOR, ENTRY_BACKGROUND, ENTRY_FOREGROUND, BUTTON_COLOR_NEW
-from constants.Texts import (
-    GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, 
-    GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE, GLOBAL_BIRTH_PLACE, GLOBAL_NATIONALITY,
-    GLOBAL_PREVIOUS_SCHOOL, GLOBAL_PENDING_SUBJECT, GLOBAL_WHICH_SUBJECT,
-    GLOBAL_REPEATING, GLOBAL_WHICH_SUBJECTS, GLOBAL_LIVES_WITH_PARENTS,
-    GLOBAL_STUDENT_EMAIL, GLOBAL_RELIGION, GLOBAL_SUBJECT, GLOBAL_NAME_AND_SURNAME, CURRENT_DATE, GLOBAL_ATTENDANCES
-)
+from constants.Texts import (GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, CURRENT_DATE, GLOBAL_ATTENDANCES, GLOBAL_LAST_NAME)
 
+# Crear tabla de estudiantes
 def create_student_table(window):
     style = ttk.Style()
     style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25)
     style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background=BACKGROUND_COLOR, foreground=BUTTON_COLOR_NEW)
 
-    columns = (
-        "cedula", "nombres", "apellidos"
-    )
-
+    columns = ("cedula", "nombres", "apellidos")
     tree = ttk.Treeview(window, columns=columns, show="headings", height=8)
     tree.pack(pady=10)
 
@@ -33,6 +25,7 @@ def create_student_table(window):
 
     return tree
 
+# Poblar la tabla de estudiantes
 def populate_table(tree):
     students = [
         {
@@ -42,57 +35,50 @@ def populate_table(tree):
             "direccion": "Calle Falsa 123", "repite": "No", "cuales_materias": "", "vive_con_padres": "Sí", 
             "email": "juan@example.com", "religion": "Católica", "sexo": "Masculino", "año_cursa": "Segundo", "telefono": "555-1234",
         },
-    ]    
+    ]
 
     for student in students:
         tree.insert("", "end", values=tuple(student.values()))
 
+# Crear tabla de docentes
 def create_teacher_table(window):
     style = ttk.Style()
     style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25)
     style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background=BACKGROUND_COLOR, foreground=BUTTON_COLOR_NEW)
 
-    # Ensure that all columns are defined here, matching the fields we want to display.
-    columns = ("cedula", "nombres", "apellidos", "asignatura", "fecha_actualizada", "asistencias")
-
-    # Define the Treeview widget with the correct columns
+    # Definir solo las columnas necesarias (sin apellidos y asignatura)
+    columns = ("cedula", "nombres", "fecha_actualizada", "asistencias")
     tree = ttk.Treeview(window, columns=columns, show="headings", height=8)
     tree.pack(pady=10)
 
-    # Define the column headings for the table (these need to match the columns above)
+    # Definir encabezados para las columnas (sin apellidos y asignatura)
     column_headings = [
         (GLOBAL_TABLE_NIT, "cedula"),
         (GLOBAL_TABLE_NAME, "nombres"),
-        (GLOBAL_LAST_NAME, "apellidos"),
-        (GLOBAL_SUBJECT, "asignatura"),
         (CURRENT_DATE, "fecha_actualizada"),
         (GLOBAL_ATTENDANCES, "asistencias")
     ]
 
-    # Set the headings and column widths for each column
     for text, column in column_headings:
         tree.heading(column, text=text)
-        tree.column(column, width=120)  # Adjust column width to fit content as needed
+        tree.column(column, width=120)
 
     return tree
 
-# Populate the teacher table with data
+# Poblar la tabla de docentes
 def populate_teacher_table(tree):
     teachers = [
         {
-            "cedula": "001", "nombres": "Carlos", "apellidos": "Gómez", "asignatura": "Matemáticas", 
-            "fecha_actualizada": "2024-10-01", "asistencias": "95%",
+            "cedula": "001", "nombres": "Carlos", "fecha_actualizada": "2024-10-01", "asistencias": "no",
         },
         {
-            "cedula": "002", "nombres": "Laura", "apellidos": "Fernández", "asignatura": "Historia", 
-            "fecha_actualizada": "2024-10-02", "asistencias": "98%",
+            "cedula": "002", "nombres": "Laura", "fecha_actualizada": "2024-10-02", "asistencias": "no",
         },
     ]
 
-    # Insert each teacher into the table with the correct number of columns
+    # Insertar los datos de los docentes en la tabla (sin apellidos ni asignatura)
     for teacher in teachers:
-        tree.insert("", "end", values=(teacher["cedula"], teacher["nombres"], teacher["apellidos"], teacher["asignatura"], teacher["fecha_actualizada"], teacher["asistencias"]))
-
+        tree.insert("", "end", values=(teacher["cedula"], teacher["nombres"], teacher["fecha_actualizada"], teacher["asistencias"]))
 
 def handle_row_selection(event, tree, edit_button, delete_button, details_button, pdf_button, on_click_action):
     selected_item = tree.selection()
@@ -101,7 +87,7 @@ def handle_row_selection(event, tree, edit_button, delete_button, details_button
 
 def bind_row_selection(tree, edit_button, delete_button, details_button, pdf_button, on_click_action):
     tree.bind("<<TreeviewSelect>>", lambda event: handle_row_selection(event, tree, edit_button, delete_button, details_button, pdf_button, on_click_action))
-    
+
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Teacher Table")
