@@ -3,15 +3,15 @@ from tkinter import ttk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 
-def add_student(tree, 
-                   nit, name, lastName, birth_place,
-                   nationality, age, birth_day, birth_month, birth_year,
-                   previous_school, pending_subject, which_subject, address, 
-                   repeating, which_subjects, lives_with_parents, email, religion, sex,
-                   course, phone, new_window):
+def add_student(tree, nit, name, lastName, birth_place,
+                nationality, age, birth_day, birth_month, birth_year,
+                previous_school, pending_subject, which_subject, address, 
+                repeating, which_subjects, lives_with_parents, email, religion, sex,
+                course, phone, family_name, family_nit, representative_name, representative_nit, new_window):
+
     tree.insert("", "end", values=(nit, name, lastName, birth_place, nationality, age, birth_day, birth_month, birth_year,
                                      previous_school, pending_subject, which_subject, address, 
-                                     repeating, which_subjects, lives_with_parents, email, religion, sex, course, phone))
+                                     repeating, which_subjects, lives_with_parents, email, religion, sex, course, phone, family_name, family_nit, representative_name, representative_nit))
     print(f"Nuevo estudiante agregado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
     new_window.destroy()
 

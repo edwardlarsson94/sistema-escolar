@@ -2,7 +2,7 @@ import tkinter as tk
 from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, TITLE_COLOR
 from constants.Texts import HOME_SUBTITLE, GLOBAL_STUDENT_TITLE_ADD, HOME_BUTTON_DELETE, HOME_BUTTON_EDIT, TEACHER_TITLE_ADD, GLOBAL_STUDENT,GLOBAL_TEACHER
 from components.Table import create_student_table, populate_table, bind_row_selection
-from src.modules.student.Student import open_new_student_form, on_click_action as on_student_click_action
+from src.modules.student.views.Student import open_new_student_form, on_click_action as on_student_click_action
 from src.modules.teachers.views.Teachers import open_new_teacher_form, on_click_action as on_teacher_click_action
 
 def create_student_tab(notebook):
