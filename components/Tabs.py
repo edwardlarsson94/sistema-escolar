@@ -28,16 +28,18 @@ def create_student_tab(notebook):
     edit_button = tk.Button(actions_frame, text=HOME_BUTTON_EDIT, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     details_button = tk.Button(actions_frame, text="Detalles", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     delete_button = tk.Button(actions_frame, text=HOME_BUTTON_DELETE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
+    pdf_button = tk.Button(actions_frame, text="Generar Certificado", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
 
-    for button in [edit_button, details_button, delete_button]:
+    for button in [edit_button, details_button, delete_button, pdf_button]:
         button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
         button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
 
     edit_button.pack(side="left", padx=10)
     details_button.pack(side="left", padx=10)
+    pdf_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
 
-    bind_row_selection(student_tree, edit_button, delete_button, details_button, on_student_click_action)
+    bind_row_selection(student_tree, edit_button, delete_button, details_button, pdf_button, on_student_click_action)
 
     return student_tab
 
@@ -76,6 +78,6 @@ def create_teacher_tab(notebook):
     details_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
 
-    bind_row_selection(teacher_tree, edit_button, delete_button, details_button, on_teacher_click_action)
+    bind_row_selection(teacher_tree, edit_button, delete_button, details_button, '', on_teacher_click_action)
 
     return teacher_tab

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
+from src.modules.records.Records import generate_certificate
 
 fields = [
     ("Cédula", GLOBAL_TABLE_NIT),
@@ -143,6 +144,16 @@ def confirm_delete_student(tree, selected_item, student_id):
     button_confirm.pack(side="left", padx=20, pady=20)
     button_cancel.pack(side="right", padx=20, pady=20)
 
+def generate_pdf_for_student(student_data):
+    first_name = student_data[1]
+    last_name = student_data[2]
+    id_number = student_data[0]
+    year = student_data[20]
+    certificate_type = "Estudio"
+    behavior = "Excelente" if certificate_type == "Buen Comportamiento" else None
+
+    generate_certificate(certificate_type, first_name, last_name, id_number, year, behavior)
+    
 # Opens Windows
 
 def open_new_student_form(tree):
@@ -423,17 +434,19 @@ def open_student_details(student_data):
 
 # Handles
 
-def on_click_action(tree, edit_button, delete_button, details_button):
+def on_click_action(tree, edit_button, delete_button, details_button, pdf_button):
     selected_item = tree.selection()
     if selected_item:
         selected_student = tree.item(selected_item, 'values')
         edit_button.config(state="normal", command=lambda: open_edit_student_form(tree, selected_item, selected_student))
         delete_button.config(state="normal", command=lambda: confirm_delete_student(tree, selected_item, selected_student[0]))
         details_button.config(state="normal", command=lambda: open_student_details(selected_student))
+        pdf_button.config(state="normal", command=lambda: generate_pdf_for_student(selected_student))
     else:
         edit_button.config(state="disabled")
         delete_button.config(state="disabled")
         details_button.config(state="disabled")
+        pdf_button.config(state="disabled")
 
 def on_enter(e):
     e.widget['background'] = BUTTON_COLOR_HOVER
