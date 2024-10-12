@@ -41,44 +41,85 @@ def open_student_details(student_data):
 def open_edit_student_form(tree, selected_item, student_data):
     new_window = tk.Toplevel()
     new_window.title(STUDENT_TITLE_EDIT)
-    new_window.geometry("400x500")
+    new_window.geometry("1200x400")
     new_window.configure(bg=BACKGROUND_COLOR)
 
+    main_frame = tk.Frame(new_window, bg=BACKGROUND_COLOR)
+    main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
+
+    # Lista de campos en el orden que deseas
     fields = [
         ("Cédula", GLOBAL_TABLE_NIT),
-        ("Nombre", GLOBAL_TABLE_NAME),
-        ("Apellido", GLOBAL_LAST_NAME),
+        ("Nombres", GLOBAL_TABLE_NAME),
+        ("Apellidos", GLOBAL_LAST_NAME),
+        ("Lugar de Nacimiento", 'Lugar de Nacimiento'),
+        ("Nacionalidad", 'Nacionalidad'),
         ("Edad", GLOBAL_AGE),
-        ("Sexo", GLOBAL_SEX),
+        ("Día de Nacimiento", "Día"),
+        ("Mes de Nacimiento", "Mes"),
+        ("Año de Nacimiento", "Año"),
+        ("Plantel de Procedencia", 'Plantel de Procedencia'),
+        ("Trae Materia Pendiente", 'Trae Materia Pendiente'),
+        ("¿Cuál?", '¿Cuál?'),
         ("Dirección", GLOBAL_ADDRESS),
+        ("Repite", 'Repite'),
+        ("¿Con Cuáles?", '¿Con Cuáles?'),
+        ("¿Vive con sus Padres?", '¿Vive con sus Padres?'),
+        ("Correo Electrónico", 'Correo Electrónico'),
+        ("Religión", 'Religión'),
+        ("Sexo", GLOBAL_SEX),
         ("Año que cursa", GLOBAL_COURSE),
         ("Teléfono", GLOBAL_PHONE)
     ]
 
     entries = {}
 
+    # Organizar los campos en una cuadrícula de tres columnas
     for i, (field, label_text) in enumerate(fields):
-        label = tk.Label(new_window, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.pack(pady=5)
-        entry = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        row = i // 3  # Cada tres campos comenzamos una nueva fila
+        col = i % 3   # Usamos el módulo para distribuir en 3 columnas
+
+        label = tk.Label(main_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
+
+        entry = tk.Entry(main_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
         entry.insert(0, student_data[i] if i < len(student_data) else "")
-        entry.pack(pady=5)
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
+
         entries[field] = entry
 
+    # Botón de guardar
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: update_student(tree, selected_item, 
-                                                           entries[GLOBAL_TABLE_NIT].get(),
-                                                           entries[GLOBAL_TABLE_NAME].get(),
-                                                           entries[GLOBAL_LAST_NAME].get(),
-                                                           entries[GLOBAL_AGE].get(),
-                                                           entries[GLOBAL_SEX].get(),
-                                                           entries[GLOBAL_ADDRESS].get(),
-                                                           entries[GLOBAL_COURSE].get(),
-                                                           entries[GLOBAL_PHONE].get(),
+                                                           entries["Cédula"].get(),
+                                                           entries["Nombres"].get(),
+                                                           entries["Apellidos"].get(),
+                                                           entries["Lugar de Nacimiento"].get(),
+                                                           entries["Nacionalidad"].get(),
+                                                           entries["Edad"].get(),
+                                                           entries["Día de Nacimiento"].get(),
+                                                           entries["Mes de Nacimiento"].get(),
+                                                           entries["Año de Nacimiento"].get(),
+                                                           entries["Plantel de Procedencia"].get(),
+                                                           entries["Trae Materia Pendiente"].get(),
+                                                           entries["¿Cuál?"].get(),
+                                                           entries["Dirección"].get(),
+                                                           entries["Repite"].get(),
+                                                           entries["¿Con Cuáles?"].get(),
+                                                           entries["¿Vive con sus Padres?"].get(),
+                                                           entries["Correo Electrónico"].get(),
+                                                           entries["Religión"].get(),
+                                                           entries["Sexo"].get(),
+                                                           entries["Año que cursa"].get(),
+                                                           entries["Teléfono"].get(),
                                                            new_window))
-    save_button.pack(pady=10)
+    save_button.pack(pady=20)
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
+
+    # Configurar columnas para que se expandan uniformemente
+    for i in range(6):  # 3 columnas * 2 (etiqueta + entrada) = 6 columnas
+        main_frame.columnconfigure(i, weight=1)
 
 def on_click_action(tree, edit_button, delete_button, details_button):
     selected_item = tree.selection()
