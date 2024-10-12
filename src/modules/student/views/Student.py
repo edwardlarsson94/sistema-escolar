@@ -42,16 +42,16 @@ family_fields = [
 ]
 
 representative_fields = [
-    ("Nombre del Representante", "Nombre Representante"),
-    ("Cédula del Representante", "Cédula Representante"),
-    ("Oficio del Representante", "Oficio del Representante"),
-    ("Parentesco con el Alumno", "Parentesco con el Alumno"),
-    ("Direccion del Domicilio", "Direccion del Domicilio"),
-    ("Teléfono de Habitación", "Teléfono de Habitación"),
-    ("Teléfono de Trabajo", "Teléfono de Trabajo"),
-    ("Teléfono de Celular", "Teléfono de Celular"),
+    ("Nombre Representante", "Nombre Representante"),
+    ("Cédula Representante", "Cédula Representante"),
+    ("Oficio Representante", "Oficio Representante"),
+    ("Parentesco al Alumno", "Parentesco al Alumno"),
+    ("Direccion Domicilio", "Direccion Domicilio"),
+    ("Teléfono Habitación", "Teléfono Habitación"),
+    ("Teléfono Trabajo", "Teléfono Trabajo"),
+    ("Teléfono Celular", "Teléfono Celular"),
     ("Correo Electrónico", "Correo Electrónico"),
-    ("En caso de que no pueda acudir a reunion o entrega de boletin autoriza a", "En caso de que no pueda acudir a reunion o entrega de boletin autoriza a"),
+    ("Autoriza en ausencia", "Autoriza en ausencia"),
     ("Cedula del autorizado", "Cedula del autorizado"),
 ]
 
@@ -159,7 +159,7 @@ def generate_pdf_for_student(student_data):
 def open_new_student_form(tree):
     new_window = tk.Toplevel()
     new_window.title(GLOBAL_STUDENT_TITLE_ADD)
-    new_window.geometry("1200x425")
+    new_window.geometry("1200x450")
     new_window.configure(bg=BACKGROUND_COLOR)
 
     # Crear un Notebook (pestañas)
@@ -195,20 +195,26 @@ def open_new_student_form(tree):
         entries[field] = entry
 
     for i, (field, label_text) in enumerate(family_fields):
+        row = i // 3  # Cada tres campos en una nueva fila
+        col = i % 3   # Distribuir en 3 columnas
+    
         label = tk.Label(family_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(family_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
 
     for i, (field, label_text) in enumerate(representative_fields):
+        row = i // 3  # Cada tres campos en una nueva fila
+        col = i % 3   # Distribuir en 3 columnas
+
         label = tk.Label(representative_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(representative_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
     # Botón de guardar
@@ -248,16 +254,16 @@ def open_new_student_form(tree):
                                                         entries["Correo del Padre"].get(),
                                                         entries["Correo de la Madre"].get(),
 
-                                                        entries["Nombre del Representante"].get(),
-                                                        entries["Cédula del Representante"].get(),                                                        
-                                                        entries["Oficio del Representante"].get(),
-                                                        entries["Parentesco con el Alumno"].get(),
-                                                        entries["Direccion del Domicilio"].get(),
-                                                        entries["Teléfono de Habitación"].get(),
-                                                        entries["Teléfono de Trabajo"].get(),
-                                                        entries["Teléfono de Celular"].get(),
+                                                        entries["Nombre Representante"].get(),
+                                                        entries["Cédula Representante"].get(),                                                        
+                                                        entries["Oficio Representante"].get(),
+                                                        entries["Parentesco al Alumno"].get(),
+                                                        entries["Direccion Domicilio"].get(),
+                                                        entries["Teléfono Habitación"].get(),
+                                                        entries["Teléfono Trabajo"].get(),
+                                                        entries["Teléfono Celular"].get(),
                                                         entries["Correo Electrónico"].get(),
-                                                        entries["En caso de que no pueda acudir a reunion o entrega de boletin autoriza a"].get(),
+                                                        entries["Autoriza en ausencia"].get(),
                                                         entries["Cedula del autorizado"].get(),
 
                                                         new_window))
@@ -303,22 +309,28 @@ def open_edit_student_form(tree, selected_item, student_data):
 
     # Organizar los campos en la pestaña de Datos del Familiar
     for i, (field, label_text) in enumerate(family_fields):
+        row = i // 3
+        col = i % 3
+    
         label = tk.Label(family_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(family_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
         entry.insert(0, student_data[len(fields) + i] if len(student_data) > len(fields) + i else "")
-        entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+        entry.grid(row=row, column=(col * 2) +1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
     # Organizar los campos en la pestaña de Datos del Representante
     for i, (field, label_text) in enumerate(representative_fields):
+        row = i // 3
+        col = i % 3
+    
         label = tk.Label(representative_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(representative_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
         entry.insert(0, student_data[len(fields) + len(family_fields) + i] if len(student_data) > len(fields) + len(family_fields) + i else "")
-        entry.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+        entry.grid(row=row, column=(col * 2) +1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
     # Botón de guardar
@@ -358,16 +370,16 @@ def open_edit_student_form(tree, selected_item, student_data):
                                 entries["Correo del Padre"].get(),                                
                                 entries["Correo de la Madre"].get(),
                                 
-                                entries["Nombre del Representante"].get(),                                
-                                entries["Cédula del Representante"].get(),                                
-                                entries["Oficio del Representante"].get(),
-                                entries["Parentesco con el Alumno"].get(),
-                                entries["Direccion del Domicilio"].get(),
-                                entries["Teléfono de Habitación"].get(),
-                                entries["Teléfono de Trabajo"].get(),
-                                entries["Teléfono de Celular"].get(),
+                                entries["Nombre Representante"].get(),                                
+                                entries["Cédula Representante"].get(),                                
+                                entries["Oficio Representante"].get(),
+                                entries["Parentesco al Alumno"].get(),
+                                entries["Direccion Domicilio"].get(),
+                                entries["Teléfono Habitación"].get(),
+                                entries["Teléfono Trabajo"].get(),
+                                entries["Teléfono Celular"].get(),
                                 entries["Correo Electrónico"].get(),
-                                entries["En caso de que no pueda acudir a reunion o entrega de boletin autoriza a"].get(),
+                                entries["Autoriza en ausencia"].get(),
                                 entries["Cedula del autorizado"].get(),
 
                                 new_window))
@@ -379,7 +391,7 @@ def open_edit_student_form(tree, selected_item, student_data):
 def open_student_details(student_data):
     details_window = tk.Toplevel()
     details_window.title("Detalles del Estudiante")
-    details_window.geometry("600x500")
+    details_window.geometry("800x500")
     details_window.configure(bg=BACKGROUND_COLOR)
 
     notebook = ttk.Notebook(details_window)
@@ -411,21 +423,27 @@ def open_student_details(student_data):
 
     # Mostrar campos en la pestaña de Datos del Familiar
     for i, (field, label_text) in enumerate(family_fields):
+        row = i // 3
+        col = i % 3
+
         label = tk.Label(family_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
-        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         value = student_data[len(fields) + i] if len(student_data) > len(fields) + i else "N/A"
         value_label = tk.Label(family_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
-        value_label.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+        value_label.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
 
     # Mostrar campos en la pestaña de Datos del Representante
     for i, (field, label_text) in enumerate(representative_fields):
+        row = i // 3
+        col = i % 3
+    
         label = tk.Label(representative_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
-        label.grid(row=i, column=0, padx=(10, 5), pady=5, sticky='e')
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         value = student_data[len(fields) + len(family_fields) + i] if len(student_data) > len(fields) + len(family_fields) + i else "N/A"
         value_label = tk.Label(representative_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
-        value_label.grid(row=i, column=1, padx=(0, 10), pady=5, sticky='w')
+        value_label.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
 
     close_button = tk.Button(details_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=details_window.destroy)
     close_button.pack(pady=10)
