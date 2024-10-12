@@ -48,3 +48,5 @@ FULL_NAME = "Nombre_Completo"
 CURRENT_DATE = "fecha_actual"
 ISSUE = "fecha_emision"
 GENERATE_RECORDS_BUTTON = "generar_constancia"
+GLOBAL_ATTENDANCES = "asistencias"
+
