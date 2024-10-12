@@ -30,8 +30,11 @@ def update_student(tree, selected_item,
 def open_student_details(student_data):
     details_window = tk.Toplevel()
     details_window.title("Detalles del Estudiante")
-    details_window.geometry("300x400")
+    details_window.geometry("900x400")
     details_window.configure(bg=BACKGROUND_COLOR)
+
+    main_frame = tk.Frame(details_window, bg=BACKGROUND_COLOR)
+    main_frame.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
 
     fields = [
         (GLOBAL_TABLE_NIT, student_data[0] if len(student_data) > 0 else "N/A"),
@@ -57,14 +60,25 @@ def open_student_details(student_data):
         (GLOBAL_PHONE, student_data[20] if len(student_data) > 20 else "N/A"),
     ]
 
-    for label_text, value in fields:
-        label = tk.Label(details_window, text=f"{label_text}: {value}", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
-        label.pack(pady=5)
+    # Organizar los campos en una cuadrícula de tres columnas
+    for i, (label_text, value) in enumerate(fields):
+        row = i // 3  # Cada tres campos en una nueva fila
+        col = i % 3   # Distribuir en 3 columnas
+
+        label = tk.Label(main_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
+
+        value_label = tk.Label(main_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
+        value_label.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
 
     close_button = tk.Button(details_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=details_window.destroy)
     close_button.pack(pady=10)
     close_button.bind("<Enter>", on_enter)
     close_button.bind("<Leave>", on_leave)
+
+    # Configurar columnas para que se expandan uniformemente
+    for i in range(6):  # 3 columnas * 2 (etiqueta + valor) = 6 columnas
+        main_frame.columnconfigure(i, weight=1)
 
 def open_edit_student_form(tree, selected_item, student_data):
     new_window = tk.Toplevel()
