@@ -1,10 +1,11 @@
 import tkinter as tk
+from  src.modules.records.Reports import generate_attendance_report
 from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, TITLE_COLOR
 from constants.Texts import HOME_SUBTITLE, GLOBAL_STUDENT_TITLE_ADD, HOME_BUTTON_DELETE, HOME_BUTTON_EDIT, TEACHER_TITLE_ADD, GLOBAL_STUDENT, GLOBAL_TEACHER
 from components.Table import create_student_table, populate_table, bind_row_selection
 from src.modules.student.views.Student import open_new_student_form, on_click_action as on_student_click_action
 from src.modules.teachers.views.Teachers import open_new_teacher_form, on_click_action as on_teacher_click_action
-from components.Table import create_teacher_table, populate_teacher_table  # Importamos las funciones correctas
+from components.Table import create_teacher_table, populate_teacher_table 
 
 def create_student_tab(notebook):
     student_tab = tk.Frame(notebook, bg=BACKGROUND_COLOR)
@@ -68,7 +69,8 @@ def create_teacher_tab(notebook):
     details_button = tk.Button(actions_frame, text="Detalles", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     delete_button = tk.Button(actions_frame, text=HOME_BUTTON_DELETE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     attendance_button = tk.Button(actions_frame, text="Asistencia", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
-    reports_button = tk.Button(actions_frame, text="Reportes", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
+    reports_button = tk.Button(actions_frame, text="Reportes", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", command=generate_attendance_report)
+
 
     for button in [edit_button, details_button, delete_button, attendance_button, reports_button]:
         button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
@@ -78,7 +80,7 @@ def create_teacher_tab(notebook):
     details_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
     attendance_button.pack(side="left", padx=10)
-    reports_button.pack(side="left", padx=10)  # Empaquetar el nuevo botón
+    reports_button.pack(side="left", padx=10)
 
     bind_row_selection(teacher_tree, edit_button, delete_button, details_button, attendance_button, reports_button, on_teacher_click_action)
 
