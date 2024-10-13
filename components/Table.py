@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from api.controllers.studentController import get_all_students
 from constants.Colors import BACKGROUND_COLOR, TITLE_COLOR, ENTRY_BACKGROUND, ENTRY_FOREGROUND, BUTTON_COLOR_NEW
-from constants.Texts import (GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, CURRENT_DATE, GLOBAL_ATTENDANCES, GLOBAL_LAST_NAME)
+from constants.Texts import (GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_ASIGNATURE, GLOBAL_PHONE, GLOBAL_LAST_NAME)
 
 def create_student_table(window):
     style = ttk.Style()
@@ -43,17 +43,17 @@ def create_teacher_table(window):
     style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25)
     style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background=BACKGROUND_COLOR, foreground=BUTTON_COLOR_NEW)
 
-    # Definir solo las columnas necesarias (sin apellidos y asignatura)
-    columns = ("cedula", "nombres", "fecha_actualizada", "asistencias")
+    # Definir solo las columnas necesarias (reemplazando fecha y asistencia por asignatura y teléfono)
+    columns = ("cedula", "nombres", "asignatura", "telefono")
     tree = ttk.Treeview(window, columns=columns, show="headings", height=8)
     tree.pack(pady=10)
 
-    # Definir encabezados para las columnas (sin apellidos y asignatura)
+    # Definir encabezados para las columnas
     column_headings = [
         (GLOBAL_TABLE_NIT, "cedula"),
         (GLOBAL_TABLE_NAME, "nombres"),
-        (CURRENT_DATE, "fecha_actualizada"),
-        (GLOBAL_ATTENDANCES, "asistencias")
+        (GLOBAL_ASIGNATURE, "asignatura"),
+        (GLOBAL_PHONE, "telefono")
     ]
 
     for text, column in column_headings:
@@ -66,16 +66,16 @@ def create_teacher_table(window):
 def populate_teacher_table(tree):
     teachers = [
         {
-            "cedula": "001", "nombres": "Carlos", "fecha_actualizada": "2024-10-01", "asistencias": "no",
+            "cedula": "001", "nombres": "Carlos", "asignatura": "Matemáticas", "telefono": "555-6789",
         },
         {
-            "cedula": "002", "nombres": "Laura", "fecha_actualizada": "2024-10-02", "asistencias": "no",
+            "cedula": "002", "nombres": "Laura", "asignatura": "Historia", "telefono": "555-9876",
         },
     ]
 
-    # Insertar los datos de los docentes en la tabla (sin apellidos ni asignatura)
+    # Insertar los datos de los docentes en la tabla
     for teacher in teachers:
-        tree.insert("", "end", values=(teacher["cedula"], teacher["nombres"], teacher["fecha_actualizada"], teacher["asistencias"]))
+        tree.insert("", "end", values=(teacher["cedula"], teacher["nombres"], teacher["asignatura"], teacher["telefono"]))
 
 def handle_row_selection(event, tree, edit_button, delete_button, details_button, pdf_button, reports_button, on_click_action):
     selected_item = tree.selection()

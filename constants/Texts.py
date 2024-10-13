@@ -30,6 +30,7 @@ GLOBAL_ADDRESS = "Dirección"
 GLOBAL_COURSE = "Año"
 GLOBAL_PHONE = "Teléfono"
 GLOBAL_SUBJECT = "Curso"
+GLOBAL_ASIGNATURE = "Asignatura"
 
 GLOBAL_BIRTH_PLACE = "Lugar de Nacimiento"
 GLOBAL_BIRTH_DATE = "Fecha de Nacimiento"

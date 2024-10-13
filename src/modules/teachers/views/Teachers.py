@@ -1,6 +1,6 @@
 import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
-from constants.Texts import (GLOBAL_TITLE_EDIT, TEACHER_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_SUBJECT, GLOBAL_PHONE)
+from constants.Texts import (GLOBAL_TITLE_EDIT, TEACHER_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_ASIGNATURE, GLOBAL_PHONE)
 from src.modules.records.Reports import open_reports_window
 
 fields = [
@@ -10,7 +10,7 @@ fields = [
     ("Edad", GLOBAL_AGE),
     ("Sexo", GLOBAL_SEX),
     ("Dirección", GLOBAL_ADDRESS),
-    ("Curso", GLOBAL_SUBJECT),
+    ("Asignatura", GLOBAL_ASIGNATURE),
     ("Teléfono", GLOBAL_PHONE)
 ]
 
@@ -61,7 +61,7 @@ def open_new_teacher_form(tree):
                                                         entries[GLOBAL_AGE].get(),
                                                         entries[GLOBAL_SEX].get(),
                                                         entries[GLOBAL_ADDRESS].get(),
-                                                        entries[GLOBAL_SUBJECT].get(),
+                                                        entries[GLOBAL_ASIGNATURE].get(),
                                                         entries[GLOBAL_PHONE].get(),
                                                         new_window))
     save_button.grid(row=(len(fields) // 1) + 1, column=1, pady=10, columnspan=3)
@@ -97,7 +97,7 @@ def open_edit_teacher_form(tree, selected_item, teacher_data):
                                                            entries[GLOBAL_AGE].get(),
                                                            entries[GLOBAL_SEX].get(),
                                                            entries[GLOBAL_ADDRESS].get(),
-                                                           entries[GLOBAL_SUBJECT].get(),
+                                                           entries[GLOBAL_ASIGNATURE].get(),
                                                            entries[GLOBAL_PHONE].get(),
                                                            new_window))
     save_button.grid(row=(len(fields) // 2) + 1, column=1, pady=10, columnspan=3)
@@ -118,7 +118,7 @@ def open_teacher_details(teacher_data):
         (GLOBAL_AGE, teacher_data[3] if len(teacher_data) > 3 else "N/A"),
         (GLOBAL_SEX, teacher_data[4] if len(teacher_data) > 4 else "N/A"),
         (GLOBAL_ADDRESS, teacher_data[5] if len(teacher_data) > 5 else "N/A"),
-        (GLOBAL_SUBJECT, teacher_data[6] if len(teacher_data) > 6 else "N/A"),
+        (GLOBAL_ASIGNATURE, teacher_data[6] if len(teacher_data) > 6 else "N/A"),
         (GLOBAL_PHONE, teacher_data[7] if len(teacher_data) > 7 else "N/A")
     ]
 
@@ -136,66 +136,82 @@ def open_teacher_details(teacher_data):
     close_button.bind("<Leave>", on_leave)
 
 def open_attendance_form(tree, selected_item, teacher_data):
-    new_window = tk.Toplevel()
-    new_window.title("Gestionar Asistencia")
-    new_window.geometry("200x125")
-    new_window.configure(bg=BACKGROUND_COLOR)
-    
-    message_label = tk.Label(new_window, text="¿El profesor asistió hoy?", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
-    message_label.pack(pady=10)
-    
-    def mark_attendance(attended):
-        attendance_status = "Sí" if attended else "No"
+    attendance_window = tk.Toplevel()
+    attendance_window.title("Registrar Asistencia")
+    attendance_window.geometry("300x250")
+    attendance_window.configure(bg=BACKGROUND_COLOR)
+
+    # Campos de entrada
+    entry_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
+    entry_frame.pack(pady=10)
+
+    labels = ["Cédula", "Nombre", "Asignatura", "Fecha"]
+    entries = {}
+
+    for i, label_text in enumerate(labels):
+        label = tk.Label(entry_frame, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+        label.grid(row=i, column=0, padx=5, pady=5, sticky='e')
+
+        entry = tk.Entry(entry_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
+        entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
+        entries[label_text] = entry
+
+    # Asignar valores por defecto, asegurando que no excedan los índices
+    entries["Cédula"].insert(0, teacher_data[0] if len(teacher_data) > 0 else "N/A")
+    entries["Nombre"].insert(0, teacher_data[1] if len(teacher_data) > 1 else "N/A")
+    entries["Asignatura"].insert(0, teacher_data[6] if len(teacher_data) > 6 else "N/A")  # Usar N/A si no hay asignatura
+    entries["Fecha"].insert(0, tk.StringVar(value=tk.StringVar().get()))  # Fecha actual
+
+    # Opción para marcar asistencia
+    attendance_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
+    attendance_frame.pack(pady=10)
+
+    attendance_label = tk.Label(attendance_frame, text="¿Asistió?", bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    attendance_label.pack(side="left", padx=5)
+
+    attendance_var = tk.StringVar(value="No")
+    yes_radio = tk.Radiobutton(attendance_frame, text="Sí", variable=attendance_var, value="Sí", bg=BACKGROUND_COLOR)
+    no_radio = tk.Radiobutton(attendance_frame, text="No", variable=attendance_var, value="No", bg=BACKGROUND_COLOR)
+
+    yes_radio.pack(side="left", padx=5)
+    no_radio.pack(side="left", padx=5)
+
+    # Botón para registrar asistencia
+    def register_attendance():
+        attendance_status = attendance_var.get()
         teacher_data_list = list(teacher_data)
         teacher_data_list.append(attendance_status)
-        
-        # Actualiza la columna de asistencia
+
+        # Actualiza la columna de asistencia en la tabla
         tree.item(selected_item, values=teacher_data_list)
-        
-        print(f"Asistencia del profesor {teacher_data[1]} marcada como: {attendance_status}")
-        new_window.destroy()
-    
-    # Botón para "Sí"
-    yes_button = tk.Button(new_window, text="Sí", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
-                           command=lambda: mark_attendance(True))
-    yes_button.pack(side="left", padx=20, pady=20)
-    yes_button.bind("<Enter>", on_enter)
-    yes_button.bind("<Leave>", on_leave)
-    
-    # Botón para "No"
-    no_button = tk.Button(new_window, text="No", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
-                          command=lambda: mark_attendance(False))
-    no_button.pack(side="right", padx=20, pady=20)
-    no_button.bind("<Enter>", on_enter)
-    no_button.bind("<Leave>", on_leave)
 
-def confirm_delete_teacher(tree, selected_item, teacher_id):
-    new_window = tk.Toplevel()
-    new_window.title(GLOBAL_CONFIRM_DELETE)
-    new_window.geometry("300x150")
-    new_window.configure(bg=BACKGROUND_COLOR)
+        print(f"Asistencia del docente {teacher_data[1]} marcada como: {attendance_status}")
+        attendance_window.destroy()
 
-    label_message = tk.Label(new_window, text=f"¿Estás seguro de que deseas borrar al docente con cédula {teacher_id}?", 
-                             bg=BACKGROUND_COLOR, fg=TITLE_COLOR, wraplength=250)
-    label_message.pack(pady=10)
+    register_button = tk.Button(attendance_window, text="Registrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR,
+                                command=register_attendance)
+    register_button.pack(pady=10)
 
-    def delete_confirmed():
+
+def confirm_delete_teacher(tree, selected_item, nit):
+    confirm_window = tk.Toplevel()
+    confirm_window.title(GLOBAL_CONFIRM_DELETE)
+    confirm_window.geometry("250x100")
+    confirm_window.configure(bg=BACKGROUND_COLOR)
+
+    message_label = tk.Label(confirm_window, text=f"¿Confirmar eliminación del docente {nit}?", bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    message_label.pack(pady=10)
+
+    def delete_teacher():
         tree.delete(selected_item)
-        print(f"Docente con cédula {teacher_id} borrado")
-        new_window.destroy()
+        print(f"Docente con cédula {nit} eliminado.")
+        confirm_window.destroy()
 
-    button_confirm = tk.Button(new_window, text=GLOBAL_BUTTON_CONFIRM, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
-                               command=delete_confirmed)
-    button_cancel = tk.Button(new_window, text=GLOBAL_BUTTON_CANCEL, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
-                              command=new_window.destroy)
+    yes_button = tk.Button(confirm_window, text=GLOBAL_BUTTON_CONFIRM, command=delete_teacher)
+    yes_button.pack(side="left", padx=(10, 5), pady=10)
 
-    button_confirm.bind("<Enter>", on_enter)
-    button_confirm.bind("<Leave>", on_leave)
-    button_cancel.bind("<Enter>", on_enter)
-    button_cancel.bind("<Leave>", on_leave)
-
-    button_confirm.pack(side="left", padx=20, pady=20)
-    button_cancel.pack(side="right", padx=20, pady=20)
+    no_button = tk.Button(confirm_window, text=GLOBAL_BUTTON_CANCEL, command=confirm_window.destroy)
+    no_button.pack(side="right", padx=(5, 10), pady=10)
 
 # Handles
 
@@ -213,8 +229,8 @@ def on_click_action(tree, edit_button, delete_button, details_button, attendance
         details_button.config(state="disabled")
         attendance_button.config(state="disabled")
 
-def on_enter(e):
-    e.widget['background'] = BUTTON_COLOR_HOVER
+def on_enter(event):
+    event.widget['background'] = BUTTON_COLOR_HOVER
 
-def on_leave(e):
-    e.widget['background'] = BUTTON_COLOR
+def on_leave(event):
+    event.widget['background'] = BUTTON_COLOR
