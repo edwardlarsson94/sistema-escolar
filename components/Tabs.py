@@ -40,7 +40,7 @@ def create_student_tab(notebook):
     pdf_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
 
-    bind_row_selection(student_tree, edit_button, delete_button, details_button, pdf_button, on_student_click_action)
+    bind_row_selection(student_tree, edit_button, delete_button, details_button, pdf_button, '', on_student_click_action)
 
     return student_tab
 
@@ -58,7 +58,6 @@ def create_teacher_tab(notebook):
                                    command=lambda: open_new_teacher_form(teacher_tree))
     new_teacher_button.pack(side="left", padx=10)
 
-    # Cambiamos a `create_teacher_table` para que cree la tabla de profesores
     teacher_tree = create_teacher_table(teacher_tab)
     populate_teacher_table(teacher_tree)
 
@@ -69,8 +68,9 @@ def create_teacher_tab(notebook):
     details_button = tk.Button(actions_frame, text="Detalles", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     delete_button = tk.Button(actions_frame, text=HOME_BUTTON_DELETE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     attendance_button = tk.Button(actions_frame, text="Asistencia", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
+    reports_button = tk.Button(actions_frame, text="Reportes", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
 
-    for button in [edit_button, details_button, delete_button, attendance_button]:
+    for button in [edit_button, details_button, delete_button, attendance_button, reports_button]:
         button.bind("<Enter>", lambda e: e.widget.config(bg=BUTTON_COLOR_HOVER))
         button.bind("<Leave>", lambda e: e.widget.config(bg=BUTTON_COLOR))
 
@@ -78,7 +78,8 @@ def create_teacher_tab(notebook):
     details_button.pack(side="left", padx=10)
     delete_button.pack(side="left", padx=10)
     attendance_button.pack(side="left", padx=10)
+    reports_button.pack(side="left", padx=10)  # Empaquetar el nuevo botón
 
-    bind_row_selection(teacher_tree, edit_button, delete_button, details_button, attendance_button, on_teacher_click_action)
+    bind_row_selection(teacher_tree, edit_button, delete_button, details_button, attendance_button, reports_button, on_teacher_click_action)
 
     return teacher_tab
