@@ -454,7 +454,7 @@ def open_student_details(student_data):
 
 # Handles
 
-def on_click_action(tree, edit_button, delete_button, details_button, pdf_button):
+def on_click_action(tree, edit_button, delete_button, details_button, pdf_button, reports_button):
     selected_item = tree.selection()
     if selected_item:
         selected_student = tree.item(selected_item, 'values')

@@ -80,13 +80,13 @@ def populate_teacher_table(tree):
     for teacher in teachers:
         tree.insert("", "end", values=(teacher["cedula"], teacher["nombres"], teacher["fecha_actualizada"], teacher["asistencias"]))
 
-def handle_row_selection(event, tree, edit_button, delete_button, details_button, pdf_button, on_click_action):
+def handle_row_selection(event, tree, edit_button, delete_button, details_button, pdf_button, reports_button, on_click_action):
     selected_item = tree.selection()
     if selected_item:
-        on_click_action(tree, edit_button, delete_button, details_button, pdf_button)
+        on_click_action(tree, edit_button, delete_button, details_button, pdf_button, reports_button)
 
-def bind_row_selection(tree, edit_button, delete_button, details_button, pdf_button, on_click_action):
-    tree.bind("<<TreeviewSelect>>", lambda event: handle_row_selection(event, tree, edit_button, delete_button, details_button, pdf_button, on_click_action))
+def bind_row_selection(tree, edit_button, delete_button, details_button, pdf_button, reports_button, on_click_action):
+    tree.bind("<<TreeviewSelect>>", lambda event: handle_row_selection(event, tree, edit_button, delete_button, details_button, pdf_button, reports_button, on_click_action))
 
 if __name__ == "__main__":
     root = tk.Tk()

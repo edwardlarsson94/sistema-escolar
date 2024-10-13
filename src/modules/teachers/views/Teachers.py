@@ -1,6 +1,7 @@
 import tkinter as tk
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (GLOBAL_TITLE_EDIT, TEACHER_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_SUBJECT, GLOBAL_PHONE)
+from src.modules.records.Reports import open_reports_window
 
 def add_teacher(tree, nit, name, lastName, age, sex, address, subject, phone, new_window):
     tree.insert("", "end", values=(nit, name, lastName, age, sex, address, subject, phone))
@@ -119,7 +120,8 @@ def confirm_delete_teacher(tree, selected_item, teacher_id):
     button_confirm.pack(side="left", padx=20, pady=20)
     button_cancel.pack(side="right", padx=20, pady=20)
 
-def on_click_action(tree, edit_button, delete_button, details_button, attendance_button):
+def on_click_action(tree, edit_button, delete_button, details_button, attendance_button, reports_button):
+    reports_button.config(state="normal", command=lambda: open_reports_window())
     selected_item = tree.selection()
     if selected_item:
         selected_teacher = tree.item(selected_item, 'values')
@@ -136,7 +138,7 @@ def on_click_action(tree, edit_button, delete_button, details_button, attendance
 def open_new_teacher_form(tree):
     new_window = tk.Toplevel()
     new_window.title(TEACHER_TITLE_ADD)
-    new_window.geometry("600x200")
+    new_window.geometry("400x550")
     new_window.configure(bg=BACKGROUND_COLOR)
 
     fields = [
