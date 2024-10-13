@@ -16,7 +16,7 @@ def update_teacher(tree, selected_item, nit, name, lastName, age, sex, address, 
 def open_teacher_details(teacher_data):
     details_window = tk.Toplevel()
     details_window.title("Detalles del Docente")
-    details_window.geometry("300x400")
+    details_window.geometry("300x200")
     details_window.configure(bg=BACKGROUND_COLOR)
 
     fields = [
@@ -30,19 +30,24 @@ def open_teacher_details(teacher_data):
         (GLOBAL_PHONE, teacher_data[7] if len(teacher_data) > 7 else "N/A")
     ]
 
-    for label_text, value in fields:
+    for i, (label_text, value) in enumerate(fields):
+        row = i // 2
+        col = i % 2
+
         label = tk.Label(details_window, text=f"{label_text}: {value}", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
-        label.pack(pady=5)
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
     close_button = tk.Button(details_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=details_window.destroy)
-    close_button.pack(pady=10)
+    close_button.grid(row=(len(fields) // 2) + 1, column=1, pady=10, columnspan=3)
+
     close_button.bind("<Enter>", on_enter)
     close_button.bind("<Leave>", on_leave)
+
 
 def open_edit_teacher_form(tree, selected_item, teacher_data):
     new_window = tk.Toplevel()
     new_window.title(GLOBAL_TITLE_EDIT)
-    new_window.geometry("400x500")
+    new_window.geometry("600x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
     fields = [
@@ -59,11 +64,15 @@ def open_edit_teacher_form(tree, selected_item, teacher_data):
     entries = {}
 
     for i, (field, label_text) in enumerate(fields):
+        row = i // 2
+        col = i % 2
+
         label = tk.Label(new_window, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.pack(pady=5)
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
+
         entry = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
         entry.insert(0, teacher_data[i] if i < len(teacher_data) else "")
-        entry.pack(pady=5)
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
@@ -77,10 +86,11 @@ def open_edit_teacher_form(tree, selected_item, teacher_data):
                                                            entries[GLOBAL_SUBJECT].get(),
                                                            entries[GLOBAL_PHONE].get(),
                                                            new_window))
-    save_button.pack(pady=10)
+    save_button.grid(row=(len(fields) // 2) + 1, column=1, pady=10, columnspan=3)
 
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
+
 
 def confirm_delete_teacher(tree, selected_item, teacher_id):
     new_window = tk.Toplevel()
@@ -138,17 +148,21 @@ def open_new_teacher_form(tree):
         ("Edad", GLOBAL_AGE),
         ("Sexo", GLOBAL_SEX),
         ("Dirección", GLOBAL_ADDRESS),
-        ("Asignatura", GLOBAL_SUBJECT),
+        ("Curso", GLOBAL_SUBJECT),
         ("Teléfono", GLOBAL_PHONE)
     ]
 
     entries = {}
 
-    for field, label_text in fields:
+    for i, (field, label_text) in enumerate(fields):
+        row = i // 2
+        col = i % 2
+
         label = tk.Label(new_window, text=label_text, bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
-        label.pack(pady=5)
+        label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
+
         entry = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.pack(pady=5)
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
@@ -162,15 +176,16 @@ def open_new_teacher_form(tree):
                                                         entries[GLOBAL_SUBJECT].get(),
                                                         entries[GLOBAL_PHONE].get(),
                                                         new_window))
-    save_button.pack(pady=10)
+    save_button.grid(row=(len(fields) // 1) + 1, column=1, pady=10, columnspan=3)
 
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
 
+
 def open_attendance_form(tree, selected_item, teacher_data):
     new_window = tk.Toplevel()
     new_window.title("Gestionar Asistencia")
-    new_window.geometry("300x200")
+    new_window.geometry("200x125")
     new_window.configure(bg=BACKGROUND_COLOR)
     
     message_label = tk.Label(new_window, text="¿El profesor asistió hoy?", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))

@@ -29,7 +29,7 @@ GLOBAL_SEX = "Sexo"
 GLOBAL_ADDRESS = "Dirección"
 GLOBAL_COURSE = "Año"
 GLOBAL_PHONE = "Teléfono"
-GLOBAL_SUBJECT = "Asignatura"
+GLOBAL_SUBJECT = "Curso"
 
 GLOBAL_BIRTH_PLACE = "Lugar de Nacimiento"
 GLOBAL_BIRTH_DATE = "Fecha de Nacimiento"
