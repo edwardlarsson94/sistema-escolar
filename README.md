@@ -63,6 +63,7 @@ sistema-escolar/
 ├── src/
 │   ├── index.py                  # Archivo principal que ejecuta la aplicación
 │   ├── modules/
+├---├── database/
 │       ├── login/
 │           ├── Login.py          # Lógica del login y vista
 ```
