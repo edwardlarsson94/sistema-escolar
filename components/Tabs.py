@@ -42,8 +42,8 @@ def create_student_tab(notebook):
     delete_button.pack(side="left", padx=10)
 
     bind_row_selection(student_tree, edit_button, delete_button, details_button, pdf_button, '', on_student_click_action)
-
-    return student_tab
+    
+    return student_tab, student_tree
 
 def create_teacher_tab(notebook):
     teacher_tab = tk.Frame(notebook, bg=BACKGROUND_COLOR)
