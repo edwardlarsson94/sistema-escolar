@@ -28,6 +28,8 @@ def create_student_table(window):
     return tree
 
 def populate_table(tree):
+    for item in tree.get_children():
+        tree.delete(item)
     success, students = get_all_students()
     if success:
         for student in students:

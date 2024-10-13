@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox 
 from api.controllers.studentController import add_student_with_relations, delete_student, fetch_student_details, update_student_with_relations
+from components.Table import populate_table
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 from src.modules.records.Records import generate_certificate
@@ -103,6 +104,7 @@ def add_student(tree,
     else:
         messagebox.showerror("Error", message)
     
+    populate_table(tree)
     new_window.destroy()
 
 def update_student(tree, selected_item, student_id,
@@ -155,6 +157,7 @@ def update_student(tree, selected_item, student_id,
     else:
         messagebox.showerror("Error", message)
     
+    populate_table(tree)
     new_window.destroy()
 
 def confirm_delete_student(tree, selected_item, student_id):
