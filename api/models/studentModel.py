@@ -113,3 +113,33 @@ def get_student_details(student_id):
     connection.close()
     
     return student_data, family_data, representative_data
+
+def delete_student_from_db(student_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    
+    try:
+        cursor.execute("SELECT family_member_id, representative_id FROM students WHERE student_id = ?", (student_id,))
+        row = cursor.fetchone()
+        
+        if row:
+            family_member_id, representative_id = row
+            
+            if family_member_id:
+                cursor.execute("DELETE FROM family_members WHERE family_member_id = ?", (family_member_id,))
+            
+            if representative_id:
+                cursor.execute("DELETE FROM representatives WHERE representative_id = ?", (representative_id,))
+        
+        cursor.execute("DELETE FROM students WHERE student_id = ?", (student_id,))
+        
+        connection.commit()
+        return True, "Estudiante eliminado con éxito."
+    
+    except Exception as e:
+        connection.rollback()
+        print(f"Error al eliminar el estudiante y sus datos relacionados: {e}")
+        return False, str(e)
+    
+    finally:
+        connection.close()

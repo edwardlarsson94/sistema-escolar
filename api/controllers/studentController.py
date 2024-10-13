@@ -1,4 +1,4 @@
-from api.models.studentModel import get_student_details, get_students, insert_family_member, insert_representative, update_student_in_db
+from api.models.studentModel import delete_student_from_db, get_student_details, get_students, insert_family_member, insert_representative, update_student_in_db
 from api.models.studentModel import insert_student
 
 def get_all_students():
@@ -58,3 +58,12 @@ def fetch_student_details(student_id):
     except Exception as e:
         print(f"Error al obtener los detalles del estudiante: {e}")
         return None, None, None
+    
+def delete_student(student_id):
+    print(f"Eliminando estudiante con ID {student_id}")
+    try:
+        success, message = delete_student_from_db(student_id)
+        return success, message
+    except Exception as e:
+        print(f"Error al eliminar los datos del estudiante: {e}")
+        return False, f"Error: {str(e)}"

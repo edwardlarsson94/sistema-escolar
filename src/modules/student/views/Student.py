@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox 
-from api.controllers.studentController import add_student_with_relations, fetch_student_details, update_student_with_relations
+from api.controllers.studentController import add_student_with_relations, delete_student, fetch_student_details, update_student_with_relations
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 from src.modules.records.Records import generate_certificate
@@ -168,8 +168,14 @@ def confirm_delete_student(tree, selected_item, student_id):
     label_message.pack(pady=10)
 
     def delete_confirmed():
-        tree.delete(selected_item)
-        messagebox.showinfo("Borrado Exitoso", f"El estudiante con cédula {student_id} ha sido borrado con éxito.")
+        success, message = delete_student(student_id)
+        
+        if success:
+            tree.delete(selected_item)
+            messagebox.showinfo("Borrado Exitoso", message)
+        else:
+            messagebox.showerror("Error", message)
+        
         new_window.destroy()
 
     button_confirm = tk.Button(new_window, text=GLOBAL_BUTTON_CONFIRM, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, 
