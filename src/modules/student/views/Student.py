@@ -6,6 +6,7 @@ from components.Table import populate_table
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 from src.modules.records.Records import generate_certificate
+from tkinter import Toplevel, Label, StringVar, OptionMenu, Entry, Button, messagebox
 
 fields = [
     ("Cédula", GLOBAL_TABLE_NIT),
@@ -194,16 +195,18 @@ def confirm_delete_student(tree, selected_item, student_id):
     button_confirm.pack(side="left", padx=20, pady=20)
     button_cancel.pack(side="right", padx=20, pady=20)
 
-def generate_pdf_for_student(student_data):
-    first_name = student_data[1]
-    last_name = student_data[2]
-    id_number = student_data[0]
-    year = student_data[20]
-    certificate_type = "Estudio"
-    behavior = "Excelente" if certificate_type == "Buen Comportamiento" else None
+def generate_pdf_for_student(student_id):
+    student_data, _, _ = fetch_student_details(student_id)
+    if student_data is None:
+        messagebox.showerror("Error", "No se encontraron datos para el estudiante seleccionado.")
+        return
 
-    generate_certificate(certificate_type, first_name, last_name, id_number, year, behavior)
+    first_name = student_data[2] if len(student_data) > 2 else "Nombre desconocido"
+    last_name = student_data[3] if len(student_data) > 3 else "Apellido desconocido"
+    id_number = student_data[1] if len(student_data) > 1 else "ID desconocido"
+    year = student_data[20] if len(student_data) > 20 else "Año desconocido"
     
+    generate_certificate_form(first_name, last_name, id_number, year)
 # Opens Windows
 
 def open_new_student_form(tree):
@@ -508,6 +511,38 @@ def open_student_details(student_id):
     close_button.bind("<Enter>", on_enter)
     close_button.bind("<Leave>", on_leave)
 
+def generate_certificate_form(first_name, last_name, id_number, year):
+
+    form_window = Toplevel()
+    form_window.title("Generar Certificado")
+    form_window.configure(bg="#1A237E")
+    
+    first_name_var = StringVar(value=first_name)
+    last_name_var = StringVar(value=last_name)
+    id_number_var = StringVar(value=id_number)
+    year_var = StringVar(value=year)
+    type_var = StringVar(value="Estudio")  # Tipo de certificado
+    behavior_var = StringVar(value="Excelente")  # Comportamiento para el certificado de buen comportamiento
+
+    # Campos de entrada
+    Label(form_window, text="Nombres:", bg="#1A237E", fg='white').grid(row=0, column=0, sticky='e', padx=5, pady=5)
+    Entry(form_window, textvariable=first_name_var).grid(row=0, column=1, padx=5, pady=5)
+    
+    Label(form_window, text="Apellidos:", bg="#1A237E", fg='white').grid(row=1, column=0, sticky='e', padx=5, pady=5)
+    Entry(form_window, textvariable=last_name_var).grid(row=1, column=1, padx=5, pady=5)
+
+    Label(form_window, text="Cédula:", bg="#1A237E", fg='white').grid(row=2, column=0, sticky='e', padx=5, pady=5)
+    Entry(form_window, textvariable=id_number_var).grid(row=2, column=1, padx=5, pady=5)
+    
+    Label(form_window, text="Año/Clase:", bg="#1A237E", fg='white').grid(row=3, column=0, sticky='e', padx=5, pady=5)
+    Entry(form_window, textvariable=year_var).grid(row=3, column=1, padx=5, pady=5)
+    
+    Label(form_window, text="Tipo de Certificado:", bg="#1A237E", fg='white').grid(row=4, column=0, sticky='e', padx=5, pady=5)
+    OptionMenu(form_window, type_var, "Estudio", "Buen Comportamiento").grid(row=4, column=1, padx=5, pady=5)
+    
+    # Botón de generación de certificado
+    Button(form_window, text="Generar Certificado", command=lambda: confirm_generate_certificate(form_window, type_var.get(), first_name_var.get(), last_name_var.get(), id_number_var.get(), year_var.get()), bg='green', fg='white').grid(row=6, column=0, columnspan=2, pady=10)
+
 # Handles
 
 def on_click_action(tree, edit_button, delete_button, details_button, pdf_button, reports_button):
@@ -524,6 +559,11 @@ def on_click_action(tree, edit_button, delete_button, details_button, pdf_button
         delete_button.config(state="disabled")
         details_button.config(state="disabled")
         pdf_button.config(state="disabled")
+
+def confirm_generate_certificate(form_window, certificate_type, first_name, last_name, id_number, year):
+    # Función para confirmar y generar el certificado
+    generate_certificate(certificate_type, first_name, last_name, id_number, year)
+    form_window.destroy()
 
 def on_enter(e):
     e.widget['background'] = BUTTON_COLOR_HOVER

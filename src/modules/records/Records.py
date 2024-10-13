@@ -4,7 +4,7 @@ from reportlab.pdfgen import canvas
 from tkinter import messagebox 
 from datetime import datetime
 
-def generate_certificate(certificate_type, first_name, last_name, id_number, year, behavior):
+def generate_certificate(certificate_type, first_name, last_name, id_number, year):
     file_name = f"Certificate_{certificate_type}_{first_name}_{last_name}.pdf"
     c = canvas.Canvas(file_name, pagesize=letter)
     width, height = letter
@@ -35,9 +35,9 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
         c.drawString((width - text_width) / 2, header_start_y - i * line_height, line)
 
     # Translate the title based on the certificate type
-    if certificate_type == "Study":
+    if certificate_type == "Estudio":
         title = "Constancia de Estudio"
-    elif certificate_type == "Good Behavior":
+    elif certificate_type == "Buen Comportamiento":
         title = "Constancia de Buen Comportamiento"
     else:
         title = "Constancia"
@@ -52,14 +52,14 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
 
     full_name = f"{first_name} {last_name}"
 
-    if certificate_type == "Study":
+    if certificate_type == "Estudio":
         text = f"""
         Quien suscribe: LCDO Asdrubal Zambrano, DIRECTOR(A) del
         Liceo Nacional Jose Felix Ribas Ubicado en el Chicaro Estado Tachira,
         hace constar que: {full_name}, con cédula de ciudadanía número {id_number},
         quien cursa el año: {year}, ha sido alumno/a regular en nuestra institución.
         """
-    elif certificate_type == "Good Behavior":
+    elif certificate_type == "Buen Comportamiento":
         text = f"""
         Se hace constar que el estudiante {full_name}, con cédula de ciudadanía 
         número {id_number}, ha cursado sus estudios en el Liceo Nacional Jose Felix Ribas
@@ -104,46 +104,3 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
     c.save()
 
     messagebox.showinfo("Generación Exitosa", f"El certificado de {certificate_type} ha sido generado con éxito.")
-
-def create_form():
-    def generate():
-        first_name = first_name_var.get()
-        last_name = last_name_var.get()
-        id_number = id_number_var.get()
-        year = year_var.get()
-        certificate_type = type_var.get()
-        behavior = behavior_var.get() if certificate_type == "Good Behavior" else None
-        generate_certificate(certificate_type, first_name, last_name, id_number, year, behavior)
-
-    form_window = Toplevel()
-    form_window.title("Generar Constancia")
-    
-    first_name_var = StringVar()
-    last_name_var = StringVar()
-    id_number_var = StringVar()
-    year_var = StringVar()
-    type_var = StringVar(value="Estudio")
-    behavior_var = StringVar(value="Excelente")
-    
-    form_window.configure(bg="#1A237E")
-
-    Label(form_window, text="Nombres:", bg="#1A237E", fg='white').grid(row=0, column=0)
-    Entry(form_window, textvariable=first_name_var).grid(row=0, column=1)
-    
-    Label(form_window, text="Apellidos:", bg="#1A237E", fg='white').grid(row=1, column=0)
-    Entry(form_window, textvariable=last_name_var).grid(row=1, column=1)
-
-    Label(form_window, text="Cédula:", bg="#1A237E", fg='white').grid(row=2, column=0)
-    Entry(form_window, textvariable=id_number_var).grid(row=2, column=1)
-    
-    Label(form_window, text="Año/Clase:", bg="#1A237E", fg='white').grid(row=3, column=0)
-    Entry(form_window, textvariable=year_var).grid(row=3, column=1)
-    
-    Label(form_window, text="Tipo de Constancia:", bg="#1A237E", fg='white').grid(row=4, column=0)
-    OptionMenu(form_window, type_var, "Estudio", "Buen Comportamiento").grid(row=4, column=1)
-    
-    Label(form_window, text="Comportamiento (si aplica):", bg="#1A237E", fg='white').grid(row=5, column=0)
-    Entry(form_window, textvariable=behavior_var).grid(row=5, column=1)
-
-    Button(form_window, text="Generar Constancia", command=generate, bg='red', fg='white').grid(row=6, column=0, columnspan=2)
-
