@@ -199,7 +199,7 @@ def confirm_delete_teacher(tree, selected_item, teacher_id):
 
 # Handles
 
-def on_click_action(tree, edit_button, delete_button, details_button, attendance_button):
+def on_click_action(tree, edit_button, delete_button, details_button, attendance_button, reports_button):
     selected_item = tree.selection()
     if selected_item:
         selected_teacher = tree.item(selected_item, 'values')
