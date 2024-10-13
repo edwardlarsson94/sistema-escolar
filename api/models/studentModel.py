@@ -52,3 +52,41 @@ def insert_student(student_data):
     cursor.execute(sql, student_data)
     connection.commit()
     connection.close()
+
+def update_student_in_db(student_id, student_data, family_data, representative_data):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    if not isinstance(student_id, int):
+        print(f"Error: student_id debería ser un número entero, pero es '{student_id}'")
+        return False, "El ID del estudiante no es válido."
+
+    sql_student = """
+    UPDATE students
+    SET id_number = ?, first_name = ?, last_name = ?, place_of_birth = ?, nationality = ?, age = ?, 
+        birth_day = ?, birth_month = ?, birth_year = ?, previous_school = ?, has_pending_subjects = ?, 
+        pending_subjects = ?, address = ?, is_repeating = ?, repeating_subjects = ?, lives_with_parents = ?, 
+        email = ?, religion = ?, gender = ?, current_year = ?, phone = ?
+    WHERE student_id = ?
+    """
+    cursor.execute(sql_student, student_data + (student_id,))
+
+    sql_family = """
+    UPDATE family_members
+    SET father_name = ?, mother_name = ?, father_id = ?, mother_id = ?, father_phone = ?, mother_phone = ?, 
+        father_occupation = ?, mother_occupation = ?, father_email = ?, mother_email = ?
+    WHERE family_member_id = (SELECT family_member_id FROM students WHERE student_id = ?)
+    """
+    cursor.execute(sql_family, family_data + (student_id,))
+
+    sql_representative = """
+    UPDATE representatives
+    SET rep_name = ?, rep_id = ?, rep_occupation = ?, relationship_to_student = ?, rep_address = ?, 
+        home_phone = ?, work_phone = ?, cell_phone = ?, rep_email = ?, authorized_person = ?, authorized_person_id = ?
+    WHERE representative_id = (SELECT representative_id FROM students WHERE student_id = ?)
+    """
+    cursor.execute(sql_representative, representative_data + (student_id,))
+
+    connection.commit()
+    connection.close()
+    return True, "Estudiante actualizado con éxito."

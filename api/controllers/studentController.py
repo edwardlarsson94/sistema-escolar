@@ -1,4 +1,4 @@
-from api.models.studentModel import get_students, insert_family_member, insert_representative
+from api.models.studentModel import get_students, insert_family_member, insert_representative, update_student_in_db
 from api.models.studentModel import insert_student
 
 def get_all_students():
@@ -26,3 +26,14 @@ def add_student_with_relations(student_data, family_data, representative_data):
     except Exception as e:
         print(f"Error al insertar el estudiante con relaciones: {e}")
         return False, f"Error al insertar el estudiante: {e}"
+
+def update_student_with_relations(student_id, student_data, family_data, representative_data):
+    try:
+        if isinstance(student_id, tuple) and len(student_id) > 0:
+            student_id_str = student_id[0]
+            student_id = int(''.join(filter(str.isdigit, student_id_str)))
+        
+        update_student_in_db(student_id, student_data, family_data, representative_data)
+        return True, "Estudiante actualizado con éxito"
+    except Exception as e:
+        return False, str(e)

@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox 
-from api.controllers.studentController import add_student_with_relations
+from api.controllers.studentController import add_student_with_relations, update_student_with_relations
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 from src.modules.records.Records import generate_certificate
@@ -105,35 +105,58 @@ def add_student(tree,
     
     new_window.destroy()
 
-def update_student(tree, selected_item,
-                    
+def update_student(tree, selected_item, 
                    nit, name, lastName, birth_place, nationality, age, birth_day,
                    birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
                    which_subjects, lives_with_parents, email, religion, sex, course, phone,
-                   
                    name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
                    phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
-
                    name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
                    address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
                    in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id,
-
                    new_window):
+
+    student_data = (
+        nit, name, lastName, birth_place, nationality, age, birth_day,
+        birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
+        which_subjects, lives_with_parents, email, religion, sex, course, phone
+    )
+
+    family_data = (
+        name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, 
+        phone_of_parent, phone_of_mother, office_of_parent, office_of_mother, 
+        email_of_parent, email_of_mother
+    )
+
+    representative_data = (
+        name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
+        address_of_house, phone_of_house, phone_of_work, phone_of_cellular, 
+        email_of_representative, in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id
+    )
+
+    student_id = selected_item
+
+    success, message = update_student_with_relations(student_id, student_data, family_data, representative_data)
     
-    tree.item(selected_item, values=(
-                                        nit, name, lastName, birth_place, nationality, age, birth_day, 
-                                        birth_month, birth_year,previous_school, pending_subject, which_subject, address, repeating, 
-                                        which_subjects, lives_with_parents, email, religion, sex, course, phone,
-
-                                        name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
-                                        phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
-
-                                        name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
-                                        address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
-                                        in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id
-                                        
-                                        ))
-    messagebox.showinfo("Edición Exitosa", f"El estudiante con cédula {nit} ha sido editado con éxito.")
+    if success:
+        messagebox.showinfo("Actualización Exitosa", message)
+        tree.item(selected_item, values=(nit, name, lastName, birth_place, nationality, age, birth_day, 
+                                         birth_month, birth_year, previous_school, pending_subject, which_subject, 
+                                         address, repeating, which_subjects, lives_with_parents, email, religion, 
+                                         sex, course, phone,
+                                         
+                                         name_of_parent, name_of_mother, nit_of_parent, nit_of_mother,
+                                         phone_of_parent, phone_of_mother, office_of_parent, office_of_mother, 
+                                         email_of_parent, email_of_mother,
+                                         
+                                         name_of_representative, nit_of_representative, office_of_representative, relationship_to_student,
+                                         address_of_house, phone_of_house, phone_of_work, phone_of_cellular, 
+                                         email_of_representative, in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to,
+                                         authorized_person_id
+                                         ))
+    else:
+        messagebox.showerror("Error", message)
+    
     new_window.destroy()
 
 def confirm_delete_student(tree, selected_item, student_id):
