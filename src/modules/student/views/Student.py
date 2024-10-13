@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox 
+from api.controllers.studentController import add_student_with_relations
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 from src.modules.records.Records import generate_certificate
@@ -58,34 +59,51 @@ representative_fields = [
 
 # Actions
 
+def get_entry_value(entry):
+    return entry.get() if entry.get() else ""
+
+
 def add_student(tree,
-                nit, name, lastName, birth_place,nationality, age, birth_day,
-                birth_month, birth_year, previous_school, pending_subject, which_subject, address,repeating,
-                which_subjects, lives_with_parents, email, religion, sex,course, phone, 
+                nit, name, lastName, birth_place, nationality, age, birth_day,
+                birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
+                which_subjects, lives_with_parents, email, religion, sex, course, phone, 
 
                 name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
                 phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
 
-                name_of_representative, nit_of_representative, office_of_representative, parentesco_with_alumno, 
+                name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
                 address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
-                in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized,
+                in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id,
 
                 new_window):
 
-    tree.insert("", "end", values=(  nit, name, lastName, birth_place, nationality, age, birth_day, 
-                                     birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating, 
-                                     which_subjects, lives_with_parents, email, religion, sex, course, phone,
+    student_data = (
+        nit, name, lastName, birth_place, nationality, age, birth_day,
+        birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
+        which_subjects, lives_with_parents, email, religion, sex, course, phone
+    )
 
-                                     name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
-                                     phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
+    family_data = (
+        name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, 
+        phone_of_parent, phone_of_mother, office_of_parent, office_of_mother, 
+        email_of_parent, email_of_mother
+    )
 
-                                     name_of_representative, nit_of_representative, office_of_representative, parentesco_with_alumno, 
-                                     address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
-                                     in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized
-                                  ))
-    messagebox.showinfo("Registro Exitoso", f"El estudiante con cédula {nit} ha sido registrado con éxito.")
+    representative_data = (
+        name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
+        address_of_house, phone_of_house, phone_of_work, phone_of_cellular, 
+        email_of_representative, in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id
+    )
+
+    success, message = add_student_with_relations(student_data, family_data, representative_data)
     
-    new_window.destroy() 
+    if success:
+        messagebox.showinfo("Registro Exitoso", message)
+        tree.insert("", "end", values=student_data)
+    else:
+        messagebox.showerror("Error", message)
+    
+    new_window.destroy()
 
 def update_student(tree, selected_item,
                     
@@ -96,9 +114,9 @@ def update_student(tree, selected_item,
                    name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
                    phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
 
-                   name_of_representative, nit_of_representative, office_of_representative, parentesco_with_alumno, 
+                   name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
                    address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
-                   in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized,
+                   in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id,
 
                    new_window):
     
@@ -110,9 +128,9 @@ def update_student(tree, selected_item,
                                         name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
                                         phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
 
-                                        name_of_representative, nit_of_representative, office_of_representative, parentesco_with_alumno, 
+                                        name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
                                         address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
-                                        in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, cedula_of_authorized
+                                        in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id
                                         
                                         ))
     messagebox.showinfo("Edición Exitosa", f"El estudiante con cédula {nit} ha sido editado con éxito.")
@@ -223,50 +241,50 @@ def open_new_student_form(tree):
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: add_student(tree, 
                                                         
-                                                        entries["Cédula"].get(),
-                                                        entries["Nombres"].get(),
-                                                        entries["Apellidos"].get(),
-                                                        entries["Lugar de Nacimiento"].get(),
-                                                        entries["Nacionalidad"].get(),
-                                                        entries["Edad"].get(),
-                                                        entries["Día de Nacimiento"].get(),
-                                                        entries["Mes de Nacimiento"].get(),
-                                                        entries["Año de Nacimiento"].get(),
-                                                        entries["Plantel de Procedencia"].get(),
-                                                        entries["Trae Materia Pendiente"].get(),
-                                                        entries["¿Cuál?"].get(),
-                                                        entries["Dirección"].get(),
-                                                        entries["Repite"].get(),
-                                                        entries["¿Con Cuáles?"].get(),
-                                                        entries["¿Vive con sus Padres?"].get(),
-                                                        entries["Correo Electrónico"].get(),
-                                                        entries["Religión"].get(),
-                                                        entries["Sexo"].get(),
-                                                        entries["Año que cursa"].get(),
-                                                        entries["Teléfono"].get(),
+                                                        get_entry_value(entries["Cédula"]),
+                                                        get_entry_value(entries["Nombres"]),
+                                                        get_entry_value(entries["Apellidos"]),
+                                                        get_entry_value(entries["Lugar de Nacimiento"]),
+                                                        get_entry_value(entries["Nacionalidad"]),
+                                                        get_entry_value(entries["Edad"]),
+                                                        get_entry_value(entries["Día de Nacimiento"]),
+                                                        get_entry_value(entries["Mes de Nacimiento"]),
+                                                        get_entry_value(entries["Año de Nacimiento"]),
+                                                        get_entry_value(entries["Plantel de Procedencia"]),
+                                                        get_entry_value(entries["Trae Materia Pendiente"]),
+                                                        get_entry_value(entries["¿Cuál?"]),
+                                                        get_entry_value(entries["Dirección"]),
+                                                        get_entry_value(entries["Repite"]),
+                                                        get_entry_value(entries["¿Con Cuáles?"]),
+                                                        get_entry_value(entries["¿Vive con sus Padres?"]),
+                                                        get_entry_value(entries["Correo Electrónico"]),
+                                                        get_entry_value(entries["Religión"]),
+                                                        get_entry_value(entries["Sexo"]),
+                                                        get_entry_value(entries["Año que cursa"]),
+                                                        get_entry_value(entries["Teléfono"]),
 
-                                                        entries["Nombre del Padre"].get(),
-                                                        entries["Nombre de la Madre"].get(),
-                                                        entries["Cédula del Padre"].get(),
-                                                        entries["Cédula de la Madre"].get(),
-                                                        entries["Teléfono del Padre"].get(),
-                                                        entries["Teléfono de la Madre"].get(),
-                                                        entries["Oficio del Padre"].get(),
-                                                        entries["Oficio de la Madre"].get(),
-                                                        entries["Correo del Padre"].get(),
-                                                        entries["Correo de la Madre"].get(),
+                                                        get_entry_value(entries["Nombre del Padre"]),
+                                                        get_entry_value(entries["Nombre de la Madre"]),
+                                                        get_entry_value(entries["Cédula del Padre"]),
+                                                        get_entry_value(entries["Cédula de la Madre"]),
+                                                        get_entry_value(entries["Teléfono del Padre"]),
+                                                        get_entry_value(entries["Teléfono de la Madre"]),
+                                                        get_entry_value(entries["Oficio del Padre"]),
+                                                        get_entry_value(entries["Oficio de la Madre"]),
+                                                        get_entry_value(entries["Correo del Padre"]),
+                                                        get_entry_value(entries["Correo de la Madre"]),
 
-                                                        entries["Nombre Representante"].get(),
-                                                        entries["Cédula Representante"].get(),                                                        
-                                                        entries["Oficio Representante"].get(),
-                                                        entries["Parentesco al Alumno"].get(),
-                                                        entries["Direccion Domicilio"].get(),
-                                                        entries["Teléfono Habitación"].get(),
-                                                        entries["Teléfono Trabajo"].get(),
-                                                        entries["Teléfono Celular"].get(),
-                                                        entries["Correo Electrónico"].get(),
-                                                        entries["Autoriza en ausencia"].get(),
-                                                        entries["Cedula del autorizado"].get(),
+                                                        get_entry_value(entries["Nombre Representante"]),
+                                                        get_entry_value(entries["Cédula Representante"]),                                                        
+                                                        get_entry_value(entries["Oficio Representante"]),
+                                                        get_entry_value(entries["Parentesco al Alumno"]),
+                                                        get_entry_value(entries["Direccion Domicilio"]),
+                                                        get_entry_value(entries["Teléfono Habitación"]),
+                                                        get_entry_value(entries["Teléfono Trabajo"]),
+                                                        get_entry_value(entries["Teléfono Celular"]),
+                                                        get_entry_value(entries["Correo Electrónico"]),
+                                                        get_entry_value(entries["Autoriza en ausencia"]),
+                                                        get_entry_value(entries["Cedula del autorizado"]),
 
                                                         new_window))
     save_button.pack(pady=20)
