@@ -9,9 +9,11 @@ def create_student_table(window):
     style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25)
     style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background=BACKGROUND_COLOR, foreground=BUTTON_COLOR_NEW)
 
-    columns = ("cedula", "nombres", "apellidos")
+    columns = ("student_id", "cedula", "nombres", "apellidos")
     tree = ttk.Treeview(window, columns=columns, show="headings", height=8)
     tree.pack(pady=10)
+
+    tree.column("student_id", width=0, stretch=tk.NO)
 
     column_headings = [
         (GLOBAL_TABLE_NIT, "cedula"),
@@ -30,6 +32,7 @@ def populate_table(tree):
     if success:
         for student in students:
             tree.insert("", "end", values=(
+                student['student_id'],
                 student['id_number'],
                 student['first_name'],
                 student['last_name'],

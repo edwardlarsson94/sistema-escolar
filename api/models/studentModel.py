@@ -3,7 +3,7 @@ from database.connection import get_db_connection
 def get_students():
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT id_number, first_name, last_name FROM students")
+    cursor.execute("SELECT student_id, id_number, first_name, last_name FROM students")
     students = cursor.fetchall()
     connection.close()
     return students
@@ -90,3 +90,26 @@ def update_student_in_db(student_id, student_data, family_data, representative_d
     connection.commit()
     connection.close()
     return True, "Estudiante actualizado con éxito."
+
+def get_student_details(student_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    
+    cursor.execute("SELECT * FROM students WHERE student_id = ?", (student_id,))
+    student_data = cursor.fetchone()
+    
+    cursor.execute("""
+        SELECT * FROM family_members 
+        WHERE family_member_id = (SELECT family_member_id FROM students WHERE student_id = ?)
+    """, (student_id,))
+    family_data = cursor.fetchone()
+    
+    cursor.execute("""
+        SELECT * FROM representatives 
+        WHERE representative_id = (SELECT representative_id FROM students WHERE student_id = ?)
+    """, (student_id,))
+    representative_data = cursor.fetchone()
+    
+    connection.close()
+    
+    return student_data, family_data, representative_data

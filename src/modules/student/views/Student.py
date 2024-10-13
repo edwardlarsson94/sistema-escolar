@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox 
-from api.controllers.studentController import add_student_with_relations, update_student_with_relations
+from api.controllers.studentController import add_student_with_relations, fetch_student_details, update_student_with_relations
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (STUDENT_TITLE_EDIT, GLOBAL_STUDENT_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_COURSE, GLOBAL_PHONE)
 from src.modules.records.Records import generate_certificate
@@ -431,7 +431,16 @@ def open_edit_student_form(tree, selected_item, student_data):
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
 
-def open_student_details(student_data):
+def open_student_details(student_id):
+    if isinstance(student_id, tuple) and len(student_id) > 0:
+        student_id_str = student_id[0]
+        student_id = int(''.join(filter(str.isdigit, student_id_str)))
+
+    student_data, family_data, representative_data = fetch_student_details(student_id)
+
+    if student_data is None and family_data is None and representative_data is None:
+        messagebox.showerror("Error", "No se encontraron datos para el estudiante con el ID proporcionado.")
+        return
     details_window = tk.Toplevel()
     details_window.title("Detalles del Estudiante")
     details_window.geometry("800x500")
@@ -452,7 +461,7 @@ def open_student_details(student_data):
     representative_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
     notebook.add(representative_frame, text="Datos del Representante")
 
-    # Mostrar campos en la pestaña de Datos del Estudiante
+    # Llenar datos del estudiante
     for i, (field, label_text) in enumerate(fields):
         row = i // 3
         col = i % 3
@@ -460,7 +469,7 @@ def open_student_details(student_data):
         label = tk.Label(student_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
-        value = student_data[i] if i < len(student_data) else "N/A"
+        value = student_data[i + 1] if student_data and len(student_data) > i else "N/A"
         value_label = tk.Label(student_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
         value_label.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
 
@@ -472,7 +481,7 @@ def open_student_details(student_data):
         label = tk.Label(family_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
-        value = student_data[len(fields) + i] if len(student_data) > len(fields) + i else "N/A"
+        value = family_data[i + 1] if family_data and len(family_data) > i else "N/A"
         value_label = tk.Label(family_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
         value_label.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
 
@@ -484,7 +493,7 @@ def open_student_details(student_data):
         label = tk.Label(representative_frame, text=f"{label_text}:", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 12))
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
-        value = student_data[len(fields) + len(family_fields) + i] if len(student_data) > len(fields) + len(family_fields) + i else "N/A"
+        value = representative_data[i + 1] if representative_data and len(representative_data) > i else "N/A"
         value_label = tk.Label(representative_frame, text=value, bg=BACKGROUND_COLOR, fg=ENTRY_FOREGROUND, font=("Helvetica", 12))
         value_label.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
 
@@ -499,9 +508,10 @@ def on_click_action(tree, edit_button, delete_button, details_button, pdf_button
     selected_item = tree.selection()
     if selected_item:
         selected_student = tree.item(selected_item, 'values')
-        edit_button.config(state="normal", command=lambda: open_edit_student_form(tree, selected_item, selected_student))
-        delete_button.config(state="normal", command=lambda: confirm_delete_student(tree, selected_item, selected_student[0]))
-        details_button.config(state="normal", command=lambda: open_student_details(selected_student))
+        student_id = selected_student[0]
+        edit_button.config(state="normal", command=lambda: open_edit_student_form(tree, selected_item, student_id))
+        delete_button.config(state="normal", command=lambda: confirm_delete_student(tree, selected_item, student_id))
+        details_button.config(state="normal", command=lambda: open_student_details(student_id))
         pdf_button.config(state="normal", command=lambda: generate_pdf_for_student(selected_student))
     else:
         edit_button.config(state="disabled")
