@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR
+from api.controllers.studentController import get_all_students
+from components.Table import populate_table
 from components.Tabs import create_student_tab, create_teacher_tab
+from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR
 
 def show_home_view():
     home_window = tk.Tk()
@@ -18,17 +20,18 @@ def show_home_view():
     cedula_entry.insert(0, "Número de Cédula")  # Texto de marcador de posición
     cedula_entry.bind("<FocusIn>", lambda e: clear_placeholder(cedula_entry))  # Limpiar el marcador de posición al hacer clic
 
-    logout_button = tk.Button(top_frame, text="Cerrar Sesión", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", command=lambda: logout(home_window))
-    logout_button.pack(side="right", padx=5)
-
-    search_button = tk.Button(top_frame, text="Buscar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", command=lambda: search_action(cedula_entry.get()))
-    search_button.pack(side="left", padx=5)
-
     notebook = ttk.Notebook(home_window)
     notebook.pack(expand=True, fill='both')
 
-    create_student_tab(notebook)
+    student_tab, student_tree = create_student_tab(notebook)
+    
+    search_button = tk.Button(top_frame, text="Buscar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", command=lambda: search_action(cedula_entry.get(), student_tree))
+    search_button.pack(side="left", padx=5)
+
     create_teacher_tab(notebook)
+
+    logout_button = tk.Button(top_frame, text="Cerrar Sesión", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", command=lambda: logout(home_window))
+    logout_button.pack(side="right", padx=5)
 
     home_window.mainloop()
 
@@ -44,27 +47,31 @@ def logout(window):
     create_login_view(root)
     root.mainloop()
 
-def search_action(cedula):
-    # Validar que solo se ingresen números enteros
+def search_action(cedula, tree):
     if not cedula.isdigit() or len(cedula) == 0:
         messagebox.showwarning("Entrada inválida", "Por favor, ingresa un número de cédula válido.")
         return
 
-    # Simulando una búsqueda
-    found = False
-    students = [
-        {"Cédula": "001", "Nombre": "Juan", "Apellido": "Pérez"},
-        {"Cédula": "002", "Nombre": "María", "Apellido": "González"},
-        {"Cédula": "003", "Nombre": "Carlos", "Apellido": "Martínez"}
-    ]
+    filter_table(tree, cedula)
 
-    # Búsqueda en la lista de estudiantes
-    for student in students:
-        if student["Cédula"] == cedula:
-            found = True
-            messagebox.showinfo("Resultado de búsqueda", f"Estudiante encontrado:\nNombre: {student['Nombre']}\nApellido: {student['Apellido']}")
-            break
-    
-    if not found:
-        messagebox.showwarning("Resultado de búsqueda", "Estudiante no encontrado.")
+def filter_table(tree, cedula):
+    for item in tree.get_children():
+        tree.delete(item)
 
+    success, students = get_all_students()
+    if success:
+        found = False
+        for student in students:
+            if student['id_number'] == cedula:
+                found = True
+                tree.insert("", "end", values=(
+                    student['student_id'],
+                    student['id_number'],
+                    student['first_name'],
+                    student['last_name'],
+                ))
+        if not found:
+            messagebox.showwarning("Resultado de búsqueda", "Estudiante no encontrado. Mostrando todos los estudiantes.")
+            populate_table(tree)
+    else:
+        messagebox.showerror("Error", "No se pudo obtener la información de los estudiantes.")
