@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+from api.controllers.studentController import get_all_students
 from constants.Colors import BACKGROUND_COLOR, TITLE_COLOR, ENTRY_BACKGROUND, ENTRY_FOREGROUND, BUTTON_COLOR_NEW
 from constants.Texts import (GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, CURRENT_DATE, GLOBAL_ATTENDANCES, GLOBAL_LAST_NAME)
 
-# Crear tabla de estudiantes
 def create_student_table(window):
     style = ttk.Style()
     style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25)
@@ -25,20 +25,17 @@ def create_student_table(window):
 
     return tree
 
-# Poblar la tabla de estudiantes
 def populate_table(tree):
-    students = [
-        {
-            "cedula": "12345678", "nombres": "Juan", "apellidos": "Pérez", "lugar_nacimiento": "Ciudad", 
-            "nacionalidad": "Mexicana", "edad": "16", "dia_nacimiento": "10", "mes_nacimiento": "Mayo", 
-            "año_nacimiento": "2005", "plantel_procedencia": "Escuela ABC", "materia_pendiente": "No", "cual": "", 
-            "direccion": "Calle Falsa 123", "repite": "No", "cuales_materias": "", "vive_con_padres": "Sí", 
-            "email": "juan@example.com", "religion": "Católica", "sexo": "Masculino", "año_cursa": "Segundo", "telefono": "555-1234",
-        },
-    ]
-
-    for student in students:
-        tree.insert("", "end", values=tuple(student.values()))
+    success, students = get_all_students()
+    if success:
+        for student in students:
+            tree.insert("", "end", values=(
+                student['id_number'],
+                student['first_name'],
+                student['last_name'],
+            ))
+    else:
+        print("No se pudo obtener la información de los estudiantes.")
 
 # Crear tabla de docentes
 def create_teacher_table(window):
