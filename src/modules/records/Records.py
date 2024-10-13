@@ -54,9 +54,8 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
 
     if certificate_type == "Study":
         text = f"""
-        Quien suscribe: LDA YARITH MARCELA CÁRDENAS GALVIS,
-        DIRECTOR(A) de la DIRECCIÓN DE REGISTRO Y CONTROL DE ACTIVIDADES ACADÉMICAS,
-        en la UNIVERSIDAD POLITÉCNICA TERRITORIAL AGROANDINA DEL ESTADO TÁCHIRA,
+        Quien suscribe: LCDO Asdrubal Zambrano, DIRECTOR(A) del
+        Liceo Nacional Jose Felix Ribas Ubicado en el Chicaro Estado Tachira,
         hace constar que: {full_name}, con cédula de ciudadanía número {id_number},
         quien cursa el año: {year}, ha sido alumno/a regular en nuestra institución.
         """
