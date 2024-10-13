@@ -35,9 +35,13 @@ def add_student_with_relations(student_data, family_data, representative_data):
 def update_student_with_relations(student_id, student_data, family_data, representative_data):
     try:
         if isinstance(student_id, tuple) and len(student_id) > 0:
-            student_id_str = student_id[0]
-            student_id = int(''.join(filter(str.isdigit, student_id_str)))
+            student_id = student_id[0]
         
+        if isinstance(student_id, str):
+            student_id = int(''.join(filter(str.isdigit, student_id)))
+        elif not isinstance(student_id, int):
+            raise ValueError("El ID del estudiante no es válido")
+
         update_student_in_db(student_id, student_data, family_data, representative_data)
         return True, "Estudiante actualizado con éxito"
     except Exception as e:

@@ -105,7 +105,7 @@ def add_student(tree,
     
     new_window.destroy()
 
-def update_student(tree, selected_item, 
+def update_student(tree, selected_item, student_id,
                    nit, name, lastName, birth_place, nationality, age, birth_day,
                    birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
                    which_subjects, lives_with_parents, email, religion, sex, course, phone,
@@ -133,8 +133,6 @@ def update_student(tree, selected_item,
         address_of_house, phone_of_house, phone_of_work, phone_of_cellular, 
         email_of_representative, in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id
     )
-
-    student_id = selected_item
 
     success, message = update_student_with_relations(student_id, student_data, family_data, representative_data)
     
@@ -314,7 +312,13 @@ def open_new_student_form(tree):
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
 
-def open_edit_student_form(tree, selected_item, student_data):
+def open_edit_student_form(tree, selected_item, student_id):    
+    student_data, family_data, representative_data = fetch_student_details(student_id)
+    
+    if student_data is None or family_data is None or representative_data is None:
+        messagebox.showerror("Error", "No se encontraron datos para el estudiante seleccionado.")
+        return
+    
     new_window = tk.Toplevel()
     new_window.title(STUDENT_TITLE_EDIT)
     new_window.geometry("1200x500")
@@ -323,21 +327,17 @@ def open_edit_student_form(tree, selected_item, student_data):
     notebook = ttk.Notebook(new_window)
     notebook.pack(expand=True, fill='both', padx=20, pady=20)
 
-    # Pestaña de datos del estudiante
     student_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
     notebook.add(student_frame, text="Datos del Estudiante")
 
-    # Pestaña de datos del familiar
     family_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
     notebook.add(family_frame, text="Datos del Familiar")
 
-    # Pestaña de datos del representante
     representative_frame = tk.Frame(notebook, bg=BACKGROUND_COLOR)
     notebook.add(representative_frame, text="Datos del Representante")
 
     entries = {}
 
-    # Organizar los campos en la pestaña de Datos del Estudiante
     for i, (field, label_text) in enumerate(fields):
         row = i // 3
         col = i % 3
@@ -346,11 +346,10 @@ def open_edit_student_form(tree, selected_item, student_data):
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(student_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.insert(0, student_data[i] if i < len(student_data) else "")
+        entry.insert(0, student_data[i + 1] if student_data and len(student_data) > i else "")
         entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
-    # Organizar los campos en la pestaña de Datos del Familiar
     for i, (field, label_text) in enumerate(family_fields):
         row = i // 3
         col = i % 3
@@ -359,11 +358,10 @@ def open_edit_student_form(tree, selected_item, student_data):
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(family_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.insert(0, student_data[len(fields) + i] if len(student_data) > len(fields) + i else "")
-        entry.grid(row=row, column=(col * 2) +1, padx=(0, 10), pady=5, sticky='w')
+        entry.insert(0, family_data[i + 1] if family_data and len(family_data) > i else "")
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
-    # Organizar los campos en la pestaña de Datos del Representante
     for i, (field, label_text) in enumerate(representative_fields):
         row = i // 3
         col = i % 3
@@ -372,14 +370,13 @@ def open_edit_student_form(tree, selected_item, student_data):
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(representative_frame, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.insert(0, student_data[len(fields) + len(family_fields) + i] if len(student_data) > len(fields) + len(family_fields) + i else "")
-        entry.grid(row=row, column=(col * 2) +1, padx=(0, 10), pady=5, sticky='w')
+        entry.insert(0, representative_data[i + 1] if representative_data and len(representative_data) > i else "")
+        entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
-    # Botón de guardar
     save_button = tk.Button(new_window, text=GLOBAL_BUTTON_SAVE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", 
                             command=lambda: update_student(
-                                tree, selected_item, 
+                                tree, selected_item, student_id,
                                 entries["Cédula"].get(),
                                 entries["Nombres"].get(),
                                 entries["Apellidos"].get(),
