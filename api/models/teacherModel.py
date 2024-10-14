@@ -28,3 +28,49 @@ def add_teacher_to_db(id_number, first_name, last_name, age, sex, address, subje
         return False, "Failed to add teacher."
     finally:
         connection.close()
+
+def update_teacher_in_db(teacher_id, id_number, first_name, last_name, age, sex, address, subject, phone):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    
+    query = """
+    UPDATE teachers
+    SET id_number = ?, first_name = ?, last_name = ?, age = ?, sex = ?, address = ?, subject = ?, phone = ?
+    WHERE teacher_id = ?
+    """
+    try:
+        cursor.execute(query, (id_number, first_name, last_name, age, sex, address, subject, phone, teacher_id))
+        connection.commit()
+        return True, "Teacher updated successfully."
+    except Exception as e:
+        print(f"Error updating teacher: {e}")
+        return False, "Failed to update teacher."
+    finally:
+        connection.close()
+
+def fetch_teacher_details(teacher_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    
+    query = "SELECT id_number, first_name, last_name, age, sex, address, subject, phone FROM teachers WHERE teacher_id = ?"
+    try:
+        cursor.execute(query, (teacher_id,))
+        teacher = cursor.fetchone()
+        if teacher:
+            return True, {
+                "id_number": teacher[0],
+                "first_name": teacher[1],
+                "last_name": teacher[2],
+                "age": teacher[3],
+                "sex": teacher[4],
+                "address": teacher[5],
+                "subject": teacher[6],
+                "phone": teacher[7]
+            }
+        else:
+            return False, "Teacher not found."
+    except Exception as e:
+        print(f"Error fetching teacher details: {e}")
+        return False, "Failed to fetch teacher details."
+    finally:
+        connection.close()

@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
-from api.controllers.teacherController import add_teacher_new
+from api.controllers.teacherController import add_teacher_new, get_teacher_details, update_teacher_by_id
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (GLOBAL_TITLE_EDIT, TEACHER_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_ASIGNATURE, GLOBAL_PHONE)
-from src.modules.records.Reports import open_reports_window
+from components.Table import populate_teacher_table 
 
 fields = [
     ("Cédula", GLOBAL_TABLE_NIT),
@@ -30,12 +30,18 @@ def add_teacher(tree,
         messagebox.showerror("Error", message)
 
 def update_teacher(tree, selected_item, 
-                   nit, name, lastName, age, sex, address, subject, phone, 
+                   id_number, name, lastName, age, sex, address, subject, phone, 
                    new_window):
-    tree.item(selected_item, values=(
-                   nit, name, lastName, age, sex, address, subject, phone))
-    print(f"Docente actualizado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
-    new_window.destroy()
+    teacher_id = tree.item(selected_item, 'values')[0]
+
+    success, message = update_teacher_by_id(teacher_id, id_number, name, lastName, age, sex, address, subject, phone)
+    if success:
+        tree.item(selected_item, values=(id_number, name, lastName, age, sex, address, subject, phone))
+        print(f"Docente actualizado con cédula: {id_number}, nombre: {name}, apellido: {lastName}")
+        populate_teacher_table(tree)
+        new_window.destroy()
+    else:
+        messagebox.showerror("Error", message)
 
 # Windows
 
@@ -74,13 +80,31 @@ def open_new_teacher_form(tree):
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
 
-def open_edit_teacher_form(tree, selected_item, teacher_data):
+def open_edit_teacher_form(tree, selected_item):
+    teacher_id = tree.item(selected_item, 'values')[0]
+
+    success, teacher_data = get_teacher_details(teacher_id)
+    if not success:
+        messagebox.showerror("Error", teacher_data)
+        return
+
     new_window = tk.Toplevel()
     new_window.title(GLOBAL_TITLE_EDIT)
     new_window.geometry("600x200")
     new_window.configure(bg=BACKGROUND_COLOR)
 
     entries = {}
+
+    data_keys = {
+        GLOBAL_TABLE_NIT: "id_number",
+        GLOBAL_TABLE_NAME: "first_name",
+        GLOBAL_LAST_NAME: "last_name",
+        GLOBAL_AGE: "age",
+        GLOBAL_SEX: "sex",
+        GLOBAL_ADDRESS: "address",
+        GLOBAL_ASIGNATURE: "subject",
+        GLOBAL_PHONE: "phone"
+    }
 
     for i, (field, label_text) in enumerate(fields):
         row = i // 2
@@ -90,7 +114,8 @@ def open_edit_teacher_form(tree, selected_item, teacher_data):
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry.insert(0, teacher_data[i] if i < len(teacher_data) else "")
+        entry_value = teacher_data.get(data_keys[field], "") if teacher_data else ""
+        entry.insert(0, entry_value)
         entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
 
@@ -224,7 +249,7 @@ def on_click_action(tree, edit_button, delete_button, details_button, attendance
     selected_item = tree.selection()
     if selected_item:
         selected_teacher = tree.item(selected_item, 'values')
-        edit_button.config(state="normal", command=lambda: open_edit_teacher_form(tree, selected_item, selected_teacher))
+        edit_button.config(state="normal", command=lambda: open_edit_teacher_form(tree, selected_item))
         delete_button.config(state="normal", command=lambda: confirm_delete_teacher(tree, selected_item, selected_teacher[0]))
         details_button.config(state="normal", command=lambda: open_teacher_details(selected_teacher))
         attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item, selected_teacher))
