@@ -38,8 +38,22 @@ def update_teacher_by_id(teacher_id, id_number, first_name, last_name, age, sex,
 
 def get_teacher_details(teacher_id):
     try:
-        success, result = fetch_teacher_details(teacher_id)
-        return success, result
+        teacher = fetch_teacher_details(teacher_id)
+        
+        if teacher:
+            teacher_data = {
+                "id_number": teacher[0],
+                "first_name": teacher[1],
+                "last_name": teacher[2],
+                "age": teacher[3],
+                "sex": teacher[4],
+                "address": teacher[5],
+                "subject": teacher[6],
+                "phone": teacher[7]
+            }
+            return True, teacher_data
+        else:
+            return False, "Teacher not found."
     except Exception as e:
         print(f"Error in controller while fetching teacher details: {e}")
         return False, "Failed to retrieve teacher details."

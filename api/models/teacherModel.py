@@ -56,21 +56,9 @@ def fetch_teacher_details(teacher_id):
     try:
         cursor.execute(query, (teacher_id,))
         teacher = cursor.fetchone()
-        if teacher:
-            return True, {
-                "id_number": teacher[0],
-                "first_name": teacher[1],
-                "last_name": teacher[2],
-                "age": teacher[3],
-                "sex": teacher[4],
-                "address": teacher[5],
-                "subject": teacher[6],
-                "phone": teacher[7]
-            }
-        else:
-            return False, "Teacher not found."
+        return teacher
     except Exception as e:
         print(f"Error fetching teacher details: {e}")
-        return False, "Failed to fetch teacher details."
+        return None
     finally:
         connection.close()
