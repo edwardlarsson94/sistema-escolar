@@ -114,7 +114,7 @@ def open_edit_teacher_form(tree, selected_item):
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
         entry = tk.Entry(new_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND, relief="flat")
-        entry_value = teacher_data.get(data_keys[field], "") if teacher_data else ""
+        entry_value = str(teacher_data.get(data_keys[field], ""))
         entry.insert(0, entry_value)
         entry.grid(row=row, column=(col * 2) + 1, padx=(0, 10), pady=5, sticky='w')
         entries[field] = entry
@@ -135,24 +135,32 @@ def open_edit_teacher_form(tree, selected_item):
     save_button.bind("<Enter>", on_enter)
     save_button.bind("<Leave>", on_leave)
 
-def open_teacher_details(teacher_data):
+def open_teacher_details(tree, selected_item):
+    teacher_id = tree.item(selected_item, 'values')[0]
+
+    success, teacher_data = get_teacher_details(teacher_id)
+    if not success:
+        messagebox.showerror("Error", teacher_data)
+        return
+
     details_window = tk.Toplevel()
     details_window.title("Detalles del Docente")
     details_window.geometry("300x200")
     details_window.configure(bg=BACKGROUND_COLOR)
 
-    fields = [
-        (GLOBAL_TABLE_NIT, teacher_data[0] if len(teacher_data) > 0 else "N/A"),
-        (GLOBAL_TABLE_NAME, teacher_data[1] if len(teacher_data) > 1 else "N/A"),
-        (GLOBAL_LAST_NAME, teacher_data[2] if len(teacher_data) > 2 else "N/A"),
-        (GLOBAL_AGE, teacher_data[3] if len(teacher_data) > 3 else "N/A"),
-        (GLOBAL_SEX, teacher_data[4] if len(teacher_data) > 4 else "N/A"),
-        (GLOBAL_ADDRESS, teacher_data[5] if len(teacher_data) > 5 else "N/A"),
-        (GLOBAL_ASIGNATURE, teacher_data[6] if len(teacher_data) > 6 else "N/A"),
-        (GLOBAL_PHONE, teacher_data[7] if len(teacher_data) > 7 else "N/A")
-    ]
+    data_keys = {
+        "id_number": "Cédula",
+        "first_name": "Nombres",
+        "last_name": "Apellido",
+        "age": "Edad",
+        "sex": "Sexo",
+        "address": "Dirección",
+        "subject": "Asignatura",
+        "phone": "Teléfono"
+    }
 
-    for i, (label_text, value) in enumerate(fields):
+    for i, (key, label_text) in enumerate(data_keys.items()):
+        value = teacher_data.get(key, "N/A")
         row = i // 2
         col = i % 2
 
@@ -160,7 +168,7 @@ def open_teacher_details(teacher_data):
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
     close_button = tk.Button(details_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=details_window.destroy)
-    close_button.grid(row=(len(fields) // 2) + 1, column=1, pady=10, columnspan=3)
+    close_button.grid(row=(len(data_keys) // 2) + 1, column=1, pady=10, columnspan=3)
 
     close_button.bind("<Enter>", on_enter)
     close_button.bind("<Leave>", on_leave)
@@ -251,7 +259,7 @@ def on_click_action(tree, edit_button, delete_button, details_button, attendance
         selected_teacher = tree.item(selected_item, 'values')
         edit_button.config(state="normal", command=lambda: open_edit_teacher_form(tree, selected_item))
         delete_button.config(state="normal", command=lambda: confirm_delete_teacher(tree, selected_item, selected_teacher[0]))
-        details_button.config(state="normal", command=lambda: open_teacher_details(selected_teacher))
+        details_button.config(state="normal", command=lambda: open_teacher_details(tree, selected_item))
         attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item, selected_teacher))
     else:
         edit_button.config(state="disabled")
