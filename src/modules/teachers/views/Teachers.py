@@ -178,13 +178,19 @@ def open_teacher_details(tree, selected_item):
     close_button.bind("<Enter>", on_enter)
     close_button.bind("<Leave>", on_leave)
 
-def open_attendance_form(tree, selected_item, teacher_data):
+def open_attendance_form(tree, selected_item):
+    teacher_id = tree.item(selected_item, 'values')[0]
+    
+    success, teacher_data = get_teacher_details(teacher_id)
+    if not success:
+        messagebox.showerror("Error", teacher_data)
+        return
+
     attendance_window = tk.Toplevel()
     attendance_window.title("Registrar Asistencia")
-    attendance_window.geometry("300x250")
+    attendance_window.geometry("300x275")
     attendance_window.configure(bg=BACKGROUND_COLOR)
 
-    # Campos de entrada
     entry_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
     entry_frame.pack(pady=10)
 
@@ -199,13 +205,11 @@ def open_attendance_form(tree, selected_item, teacher_data):
         entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
         entries[label_text] = entry
 
-    # Asignar valores por defecto, asegurando que no excedan los índices
-    entries["Cédula"].insert(0, teacher_data[0] if len(teacher_data) > 0 else "N/A")
-    entries["Nombre"].insert(0, teacher_data[1] if len(teacher_data) > 1 else "N/A")
-    entries["Asignatura"].insert(0, teacher_data[6] if len(teacher_data) > 6 else "N/A")  # Usar N/A si no hay asignatura
-    entries["Fecha"].insert(0, tk.StringVar(value=tk.StringVar().get()))  # Fecha actual
+    entries["Cédula"].insert(0, teacher_data.get("id_number", "N/A"))
+    entries["Nombre"].insert(0, teacher_data.get("first_name", "N/A"))
+    entries["Asignatura"].insert(0, teacher_data.get("subject", "N/A"))
+    entries["Fecha"].insert(0, "")
 
-    # Opción para marcar asistencia
     attendance_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
     attendance_frame.pack(pady=10)
 
@@ -219,16 +223,9 @@ def open_attendance_form(tree, selected_item, teacher_data):
     yes_radio.pack(side="left", padx=5)
     no_radio.pack(side="left", padx=5)
 
-    # Botón para registrar asistencia
     def register_attendance():
         attendance_status = attendance_var.get()
-        teacher_data_list = list(teacher_data)
-        teacher_data_list.append(attendance_status)
-
-        # Actualiza la columna de asistencia en la tabla
-        tree.item(selected_item, values=teacher_data_list)
-
-        print(f"Asistencia del docente {teacher_data[1]} marcada como: {attendance_status}")
+        print(f"Asistencia del docente {teacher_data['first_name']} marcada como: {attendance_status}")
         attendance_window.destroy()
 
     register_button = tk.Button(attendance_window, text="Registrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR,
@@ -269,7 +266,7 @@ def on_click_action(tree, edit_button, delete_button, details_button, attendance
         edit_button.config(state="normal", command=lambda: open_edit_teacher_form(tree, selected_item))
         delete_button.config(state="normal", command=lambda: confirm_delete_teacher(tree, selected_item, selected_teacher[0]))
         details_button.config(state="normal", command=lambda: open_teacher_details(tree, selected_item))
-        attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item, selected_teacher))
+        attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item))
     else:
         edit_button.config(state="disabled")
         delete_button.config(state="disabled")
