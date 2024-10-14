@@ -1,3 +1,4 @@
+import datetime
 import tkinter as tk
 from tkinter import messagebox
 from api.controllers.teacherController import add_teacher_new, get_teacher_details, remove_teacher, update_teacher_by_id
@@ -208,7 +209,8 @@ def open_attendance_form(tree, selected_item):
     entries["Cédula"].insert(0, teacher_data.get("id_number", "N/A"))
     entries["Nombre"].insert(0, teacher_data.get("first_name", "N/A"))
     entries["Asignatura"].insert(0, teacher_data.get("subject", "N/A"))
-    entries["Fecha"].insert(0, "")
+    current_date = datetime.datetime.now().strftime("%d/%m/%Y")
+    entries["Fecha"].insert(0, current_date)
 
     attendance_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
     attendance_frame.pack(pady=10)
