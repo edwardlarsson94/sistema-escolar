@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from api.controllers.teacherController import add_teacher_new, get_teacher_details, update_teacher_by_id
+from api.controllers.teacherController import add_teacher_new, get_teacher_details, remove_teacher, update_teacher_by_id
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (GLOBAL_TITLE_EDIT, TEACHER_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_ASIGNATURE, GLOBAL_PHONE)
 from components.Table import populate_teacher_table 
@@ -235,19 +235,23 @@ def open_attendance_form(tree, selected_item, teacher_data):
                                 command=register_attendance)
     register_button.pack(pady=10)
 
-
-def confirm_delete_teacher(tree, selected_item, nit):
+def confirm_delete_teacher(tree, selected_item, id_number):
     confirm_window = tk.Toplevel()
     confirm_window.title(GLOBAL_CONFIRM_DELETE)
     confirm_window.geometry("250x100")
     confirm_window.configure(bg=BACKGROUND_COLOR)
 
-    message_label = tk.Label(confirm_window, text=f"¿Confirmar eliminación del docente {nit}?", bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
+    message_label = tk.Label(confirm_window, text=f"¿Confirmar eliminación del docente {id_number}?", bg=BACKGROUND_COLOR, fg=TITLE_COLOR)
     message_label.pack(pady=10)
 
     def delete_teacher():
-        tree.delete(selected_item)
-        print(f"Docente con cédula {nit} eliminado.")
+        teacher_id = tree.item(selected_item, 'values')[0]
+        success, message = remove_teacher(teacher_id)
+        if success:
+            tree.delete(selected_item)
+            print(f"Docente con cédula {id_number} eliminado.")
+        else:
+            messagebox.showerror("Error", message)
         confirm_window.destroy()
 
     yes_button = tk.Button(confirm_window, text=GLOBAL_BUTTON_CONFIRM, command=delete_teacher)

@@ -1,4 +1,4 @@
-from api.models.teacherModel import add_teacher_to_db, fetch_all_teachers, fetch_teacher_details, update_teacher_in_db
+from api.models.teacherModel import add_teacher_to_db, delete_teacher_by_id, fetch_all_teachers, fetch_teacher_details, update_teacher_in_db
 
 def get_all_teachers():
     try:
@@ -57,3 +57,7 @@ def get_teacher_details(teacher_id):
     except Exception as e:
         print(f"Error in controller while fetching teacher details: {e}")
         return False, "Failed to retrieve teacher details."
+    
+def remove_teacher(teacher_id):
+    success, message = delete_teacher_by_id(teacher_id)
+    return success, message

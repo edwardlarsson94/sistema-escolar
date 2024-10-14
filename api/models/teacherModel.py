@@ -62,3 +62,18 @@ def fetch_teacher_details(teacher_id):
         return None
     finally:
         connection.close()
+
+def delete_teacher_by_id(teacher_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    
+    try:
+        query = "DELETE FROM teachers WHERE teacher_id = ?"
+        cursor.execute(query, (teacher_id,))
+        connection.commit()
+        return True, "Docente eliminado exitosamente."
+    except Exception as e:
+        print(f"Error eliminando el docente: {e}")
+        return False, "Error al eliminar el docente."
+    finally:
+        connection.close()
