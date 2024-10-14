@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import messagebox
+from api.controllers.teacherController import add_teacher_new
 from constants.Colors import (BACKGROUND_COLOR, TITLE_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, ENTRY_BACKGROUND, ENTRY_FOREGROUND)
 from constants.Texts import (GLOBAL_TITLE_EDIT, TEACHER_TITLE_ADD, GLOBAL_CONFIRM_DELETE, GLOBAL_TABLE_NIT, GLOBAL_TABLE_NAME, GLOBAL_BUTTON_SAVE, GLOBAL_BUTTON_CONFIRM, GLOBAL_BUTTON_CANCEL, GLOBAL_LAST_NAME, GLOBAL_AGE, GLOBAL_SEX, GLOBAL_ADDRESS, GLOBAL_ASIGNATURE, GLOBAL_PHONE)
 from src.modules.records.Reports import open_reports_window
@@ -17,12 +19,15 @@ fields = [
 # Actions
 
 def add_teacher(tree, 
-                nit, name, lastName, age, sex, address, subject, phone, 
+                id_number, name, lastName, age, sex, address, subject, phone, 
                 new_window):
-    tree.insert("", "end", values=(
-                nit, name, lastName, age, sex, address, subject, phone))
-    print(f"Nuevo docente agregado con cédula: {nit}, nombre: {name}, apellido: {lastName}")
-    new_window.destroy()
+    success, message = add_teacher_new(id_number, name, lastName, age, sex, address, subject, phone)
+    if success:
+        tree.insert("", "end", values=(id_number, name, lastName, age, sex, address, subject, phone))
+        print(f"Nuevo docente agregado con cédula: {id_number}, nombre: {name}, apellido: {lastName}")
+        new_window.destroy()
+    else:
+        messagebox.showerror("Error", message)
 
 def update_teacher(tree, selected_item, 
                    nit, name, lastName, age, sex, address, subject, phone, 

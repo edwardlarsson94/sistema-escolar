@@ -1,4 +1,4 @@
-from api.models.teacherModel import fetch_all_teachers
+from api.models.teacherModel import add_teacher_to_db, fetch_all_teachers
 
 def get_all_teachers():
     try:
@@ -19,3 +19,11 @@ def get_all_teachers():
     except Exception as e:
         print(f"Error al obtener los datos de los profesores: {e}")
         return False, []
+
+def add_teacher_new(id_number, first_name, last_name, age, sex, address, subject, phone):
+    try:
+        success, message = add_teacher_to_db(id_number, first_name, last_name, age, sex, address, subject, phone)
+        return success, message
+    except Exception as e:
+        print(f"Error while adding teacher: {e}")
+        return False, "Failed to add teacher."
