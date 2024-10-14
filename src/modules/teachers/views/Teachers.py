@@ -136,6 +136,10 @@ def open_edit_teacher_form(tree, selected_item):
     save_button.bind("<Leave>", on_leave)
 
 def open_teacher_details(tree, selected_item):
+    if not selected_item or not tree.exists(selected_item):
+        messagebox.showerror("Error", "No se ha seleccionado ningún docente válido.")
+        return
+
     teacher_id = tree.item(selected_item, 'values')[0]
 
     success, teacher_data = get_teacher_details(teacher_id)
