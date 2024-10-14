@@ -25,6 +25,7 @@ def add_teacher(tree,
     if success:
         tree.insert("", "end", values=(id_number, name, lastName, age, sex, address, subject, phone))
         print(f"Nuevo docente agregado con cédula: {id_number}, nombre: {name}, apellido: {lastName}")
+        populate_teacher_table(tree)
         new_window.destroy()
     else:
         messagebox.showerror("Error", message)
