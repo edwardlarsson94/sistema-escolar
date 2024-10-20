@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+import re
+from datetime import datetime
 from tkinter import messagebox 
 from api.controllers.studentController import add_student_with_relations, delete_student, fetch_student_details, update_student_with_relations
 from components.Table import populate_table
@@ -65,102 +67,59 @@ def get_entry_value(entry):
     return entry.get() if entry.get() else ""
 
 
-def add_student(tree,
-                nit, name, lastName, birth_place, nationality, age, birth_day,
-                birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
-                which_subjects, lives_with_parents, email, religion, sex, course, phone, 
+def add_student(tree, *args):
+    # Extraer los datos de los argumentos
+    student_data = args[:21]  # Primeros 21 argumentos son datos del estudiante
+    family_data = args[21:31]  # Siguientes 10 argumentos son datos familiares
+    representative_data = args[31:42]  # Últimos 11 argumentos son datos del representante
+    new_window = args[-1]  # El último argumento es la ventana
 
-                name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
-                phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
+    # Validar todos los datos antes de proceder
+    if not all([
+        validate_student_data(student_data),
+        validate_family_data(family_data),
+        validate_representative_data(representative_data)
+    ]):
+        return
 
-                name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
-                address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
-                in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id,
-
-                new_window):
-
-    student_data = (
-        nit, name, lastName, birth_place, nationality, age, birth_day,
-        birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
-        which_subjects, lives_with_parents, email, religion, sex, course, phone
-    )
-
-    family_data = (
-        name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, 
-        phone_of_parent, phone_of_mother, office_of_parent, office_of_mother, 
-        email_of_parent, email_of_mother
-    )
-
-    representative_data = (
-        name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
-        address_of_house, phone_of_house, phone_of_work, phone_of_cellular, 
-        email_of_representative, in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id
-    )
-
+    # Si todas las validaciones pasan, proceder con el guardado
     success, message = add_student_with_relations(student_data, family_data, representative_data)
     
     if success:
         messagebox.showinfo("Registro Exitoso", message)
         tree.insert("", "end", values=student_data)
+        populate_table(tree)
+        new_window.destroy()
     else:
         messagebox.showerror("Error", message)
-    
-    populate_table(tree)
-    new_window.destroy()
 
-def update_student(tree, selected_item, student_id,
-                   nit, name, lastName, birth_place, nationality, age, birth_day,
-                   birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
-                   which_subjects, lives_with_parents, email, religion, sex, course, phone,
-                   name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, phone_of_parent,
-                   phone_of_mother, office_of_parent, office_of_mother, email_of_parent, email_of_mother,
-                   name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
-                   address_of_house, phone_of_house, phone_of_work, phone_of_cellular, email_of_representative, 
-                   in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id,
-                   new_window):
+def update_student(tree, selected_item, student_id, *args):
+    # Extraer los datos de los argumentos
+    student_data = args[:21]  # Primeros 21 argumentos son datos del estudiante
+    family_data = args[21:31]  # Siguientes 10 argumentos son datos familiares
+    representative_data = args[31:42]  # Últimos 11 argumentos son datos del representante
+    new_window = args[-1]  # El último argumento es la ventana
 
-    student_data = (
-        nit, name, lastName, birth_place, nationality, age, birth_day,
-        birth_month, birth_year, previous_school, pending_subject, which_subject, address, repeating,
-        which_subjects, lives_with_parents, email, religion, sex, course, phone
-    )
+    # Validar todos los datos antes de proceder
+    if not all([
+        validate_student_data(student_data),
+        validate_family_data(family_data),
+        validate_representative_data(representative_data)
+    ]):
+        return
 
-    family_data = (
-        name_of_parent, name_of_mother, nit_of_parent, nit_of_mother, 
-        phone_of_parent, phone_of_mother, office_of_parent, office_of_mother, 
-        email_of_parent, email_of_mother
-    )
-
-    representative_data = (
-        name_of_representative, nit_of_representative, office_of_representative, relationship_to_student, 
-        address_of_house, phone_of_house, phone_of_work, phone_of_cellular, 
-        email_of_representative, in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to, authorized_person_id
-    )
-
+    # Si todas las validaciones pasan, proceder con la actualización
     success, message = update_student_with_relations(student_id, student_data, family_data, representative_data)
     
     if success:
         messagebox.showinfo("Actualización Exitosa", message)
-        tree.item(selected_item, values=(nit, name, lastName, birth_place, nationality, age, birth_day, 
-                                         birth_month, birth_year, previous_school, pending_subject, which_subject, 
-                                         address, repeating, which_subjects, lives_with_parents, email, religion, 
-                                         sex, course, phone,
-                                         
-                                         name_of_parent, name_of_mother, nit_of_parent, nit_of_mother,
-                                         phone_of_parent, phone_of_mother, office_of_parent, office_of_mother, 
-                                         email_of_parent, email_of_mother,
-                                         
-                                         name_of_representative, nit_of_representative, office_of_representative, relationship_to_student,
-                                         address_of_house, phone_of_house, phone_of_work, phone_of_cellular, 
-                                         email_of_representative, in_case_of_no_acuity_to_meeting_or_delivery_of_bill_authorized_to,
-                                         authorized_person_id
-                                         ))
+        tree.item(selected_item, values=(student_data + family_data + representative_data))
+        populate_table(tree)
+        new_window.destroy()
     else:
         messagebox.showerror("Error", message)
-    
-    populate_table(tree)
-    new_window.destroy()
-
+        
+        
 def confirm_delete_student(tree, selected_item, student_id):
     new_window = tk.Toplevel()
     new_window.title(GLOBAL_CONFIRM_DELETE)
@@ -538,12 +497,223 @@ def generate_certificate_form(first_name, last_name, id_number, year):
     Entry(form_window, textvariable=year_var).grid(row=3, column=1, padx=5, pady=5)
     
     Label(form_window, text="Tipo de Certificado:", bg="#1A237E", fg='white').grid(row=4, column=0, sticky='e', padx=5, pady=5)
-    OptionMenu(form_window, type_var, "Estudio", "Buen Comportamiento").grid(row=4, column=1, padx=5, pady=5)
+    OptionMenu(form_window, type_var, "Estudio", "Buena Conducta").grid(row=4, column=1, padx=5, pady=5)
     
     # Botón de generación de certificado
     Button(form_window, text="Generar Certificado", command=lambda: confirm_generate_certificate(form_window, type_var.get(), first_name_var.get(), last_name_var.get(), id_number_var.get(), year_var.get()), bg='green', fg='white').grid(row=6, column=0, columnspan=2, pady=10)
 
-# Handles
+# Handlesp
+
+class FieldValidation:
+    @staticmethod
+    def validate_required_field(value, field_name):
+        """Validates that a required field is not empty"""
+        if not value or value.strip() == "":
+            raise ValueError(f"El campo {field_name} es requerido")
+        return value.strip()
+
+    @staticmethod
+    def validate_nit(value):
+        """Validates Venezuelan ID format (V-xxxxxxxx or E-xxxxxxxx)"""
+        if not value:
+            raise ValueError("La cédula es requerida")
+        
+        pattern = r'^[VE]-\d{7,8}$'
+        if not re.match(pattern, value):
+            raise ValueError("Formato de cédula inválido. Debe ser V-xxxxxxxx o E-xxxxxxxx")
+        return value
+
+    @staticmethod
+    def validate_name(value, field_name):
+        """Validates that a name contains only letters, spaces, and common special characters"""
+        if not value:
+            raise ValueError(f"El {field_name} es requerido")
+        
+        pattern = r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s\'-]+$'
+        if not re.match(pattern, value):
+            raise ValueError(f"El {field_name} solo debe contener letras y espacios")
+        return value.strip()
+
+    @staticmethod
+    def validate_age(value):
+        """Validates that age is a number between 1 and 100"""
+        if not value:
+            raise ValueError("La edad es requerida")
+        
+        try:
+            age = int(value)
+            if not 1 <= age <= 100:
+                raise ValueError("La edad debe estar entre 1 y 100 años")
+        except ValueError:
+            raise ValueError("La edad debe ser un número válido")
+        return value
+
+    @staticmethod
+    def validate_date(day, month, year):
+        """Validates that a date is valid and not in the future"""
+        if not all([day, month, year]):
+            raise ValueError("La fecha de nacimiento completa es requerida")
+        
+        try:
+            day = int(day)
+            month = int(month)
+            year = int(year)
+            birth_date = datetime(year, month, day)
+            
+            if birth_date > datetime.now():
+                raise ValueError("La fecha de nacimiento no puede ser futura")
+            
+            return True
+        except ValueError as e:
+            raise ValueError("Fecha de nacimiento inválida")
+
+    @staticmethod
+    def validate_email(value, field_name="Correo electrónico"):
+        """Validates email format"""
+        if not value:  # Si el email es opcional
+            return value
+        
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(pattern, value):
+            raise ValueError(f"{field_name} inválido")
+        return value
+
+    @staticmethod
+    def validate_phone(value, field_name="Teléfono"):
+        """Validates phone number format"""
+        if not value:  # Si el teléfono es opcional
+            return value
+        
+        pattern = r'^\+?\d{10,15}$'
+        if not re.match(pattern, value):
+            raise ValueError(f"{field_name} inválido. Debe contener entre 10 y 15 dígitos")
+        return value
+
+    @staticmethod
+    def validate_course(value):
+        """Validates that course is a valid year"""
+        valid_courses = ["1er", "2do", "3er", "4to", "5to"]
+        if value not in valid_courses:
+            raise ValueError("Año de curso inválido")
+        return value
+
+    @staticmethod
+    def validate_sex(value):
+        """Validates sex field"""
+        valid_options = ["M", "F"]
+        if value.upper() not in valid_options:
+            raise ValueError("Sexo debe ser M o F")
+        return value.upper()
+
+    @staticmethod
+    def validate_boolean_field(value, field_name):
+        """Validates fields that should be Si or No"""
+        valid_options = ["Si", "No"]
+        if value and value not in valid_options:
+            raise ValueError(f"El campo {field_name} debe ser Si o No")
+        return value
+
+def validate_student_data(student_data):
+    """Validates all student fields before saving/updating"""
+    validator = FieldValidation()
+    
+    # Desempaquetar los datos del estudiante
+    (nit, name, lastName, birth_place, nationality, age, birth_day,
+     birth_month, birth_year, previous_school, pending_subject, which_subject,
+     address, repeating, which_subjects, lives_with_parents, email, religion,
+     sex, course, phone) = student_data
+
+    try:
+        # Validaciones principales
+        validator.validate_nit(nit)
+        validator.validate_name(name, "nombre")
+        validator.validate_name(lastName, "apellido")
+        validator.validate_required_field(birth_place, "lugar de nacimiento")
+        validator.validate_required_field(nationality, "nacionalidad")
+        validator.validate_age(age)
+        validator.validate_date(birth_day, birth_month, birth_year)
+        validator.validate_required_field(previous_school, "plantel de procedencia")
+        validator.validate_boolean_field(pending_subject, "materia pendiente")
+        validator.validate_required_field(address, "dirección")
+        validator.validate_boolean_field(repeating, "repite")
+        validator.validate_boolean_field(lives_with_parents, "vive con sus padres")
+        validator.validate_email(email)
+        validator.validate_required_field(religion, "religión")
+        validator.validate_sex(sex)
+        validator.validate_course(course)
+        validator.validate_phone(phone)
+
+        return True
+
+    except ValueError as e:
+        messagebox.showerror("Error de Validación", str(e))
+        return False
+
+def validate_family_data(family_data):
+    """Validates all family fields before saving/updating"""
+    validator = FieldValidation()
+    
+    (name_of_parent, name_of_mother, nit_of_parent, nit_of_mother,
+     phone_of_parent, phone_of_mother, office_of_parent, office_of_mother,
+     email_of_parent, email_of_mother) = family_data
+
+    try:
+        # Validar al menos un padre/madre
+        if not (name_of_parent or name_of_mother):
+            raise ValueError("Debe proporcionar información de al menos un padre o madre")
+
+        # Validaciones condicionales para el padre
+        if name_of_parent:
+            validator.validate_name(name_of_parent, "nombre del padre")
+            validator.validate_nit(nit_of_parent)
+            validator.validate_phone(phone_of_parent, "teléfono del padre")
+            validator.validate_required_field(office_of_parent, "oficio del padre")
+            validator.validate_email(email_of_parent, "correo del padre")
+
+        # Validaciones condicionales para la madre
+        if name_of_mother:
+            validator.validate_name(name_of_mother, "nombre de la madre")
+            validator.validate_nit(nit_of_mother)
+            validator.validate_phone(phone_of_mother, "teléfono de la madre")
+            validator.validate_required_field(office_of_mother, "oficio de la madre")
+            validator.validate_email(email_of_mother, "correo de la madre")
+
+        return True
+
+    except ValueError as e:
+        messagebox.showerror("Error de Validación", str(e))
+        return False
+
+def validate_representative_data(representative_data):
+    """Validates all representative fields before saving/updating"""
+    validator = FieldValidation()
+    
+    (name_of_representative, nit_of_representative, office_of_representative,
+     relationship_to_student, address_of_house, phone_of_house, phone_of_work,
+     phone_of_cellular, email_of_representative, authorized_in_absence,
+     authorized_person_id) = representative_data
+
+    try:
+        # Validaciones del representante
+        validator.validate_name(name_of_representative, "nombre del representante")
+        validator.validate_nit(nit_of_representative)
+        validator.validate_required_field(office_of_representative, "oficio del representante")
+        validator.validate_required_field(relationship_to_student, "parentesco")
+        validator.validate_required_field(address_of_house, "dirección")
+        validator.validate_phone(phone_of_house, "teléfono de habitación")
+        validator.validate_phone(phone_of_work, "teléfono de trabajo")
+        validator.validate_phone(phone_of_cellular, "teléfono celular")
+        validator.validate_email(email_of_representative, "correo del representante")
+        
+        # Validaciones para persona autorizada
+        if authorized_in_absence == "Si":
+            validator.validate_nit(authorized_person_id)
+
+        return True
+
+    except ValueError as e:
+        messagebox.showerror("Error de Validación", str(e))
+        return False
 
 def on_click_action(tree, edit_button, delete_button, details_button, pdf_button, reports_button):
     selected_item = tree.selection()

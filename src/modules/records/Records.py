@@ -5,7 +5,7 @@ from tkinter import messagebox
 from datetime import datetime
 
 def generate_certificate(certificate_type, first_name, last_name, id_number, year):
-    file_name = f"Certificate_{certificate_type}_{first_name}_{last_name}.pdf"
+    file_name = f"Certificate_{certificate_type}{first_name}{last_name}.pdf"
     c = canvas.Canvas(file_name, pagesize=letter)
     width, height = letter
 
@@ -34,11 +34,11 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
         text_width = c.stringWidth(line, "Helvetica", 12)
         c.drawString((width - text_width) / 2, header_start_y - i * line_height, line)
 
-    # Translate the title based on the certificate type
+    # Traducir el título según el tipo de certificado
     if certificate_type == "Estudio":
         title = "Constancia de Estudio"
-    elif certificate_type == "Buen Comportamiento":
-        title = "Constancia de Buen Comportamiento"
+    elif certificate_type == "Buena Conducta":
+        title = "Constancia de Buena Conducta"
     else:
         title = "Constancia"
 
@@ -56,15 +56,15 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
         text = f"""
         Quien suscribe: LCDO Asdrubal Zambrano, DIRECTOR(A) del
         Liceo Nacional Jose Felix Ribas Ubicado en el Chicaro Estado Tachira,
-        hace constar que: {full_name}, con cédula de ciudadanía número {id_number},
+        hace constar que: {full_name}, con cédula de identidad {id_number},
         quien cursa el año: {year}, ha sido alumno/a regular en nuestra institución.
         """
-    elif certificate_type == "Buen Comportamiento":
+    elif certificate_type == "Buena Conducta":
         text = f"""
-        Se hace constar que el estudiante {full_name}, con cédula de ciudadanía 
-        número {id_number}, ha cursado sus estudios en el Liceo Nacional Jose Felix Ribas
-        desde {current_date} hasta la fecha. Durante todo este tiempo, el estudiante ha
-        demostrado un comportamiento ejemplar, caracterizado por su respeto hacia los
+        Se hace constar que el estudiante {full_name}, con cédula de identidad
+        {id_number}, cursa sus estudios en el Liceo Nacional Jose Felix Ribas
+        actualmente. Durante todo este tiempo, el/la estudiante ha demostrado 
+        un comportamiento ejemplar, caracterizado por su respeto hacia los
         profesores y compañeros, su puntualidad y su compromiso con las actividades académicas.
 
         Por lo tanto, se le extiende la presente constancia como reconocimiento
@@ -84,12 +84,8 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
 
     spacing = 227  
     
-    issue_date = f"Expedido el {current_date}"  
-    date_text_width = c.stringWidth(issue_date, "Helvetica", 12)
-    c.drawString((width - date_text_width) / 2, text_start_y - (len(lines) * line_height) - spacing, issue_date)
-
     signature_text = """
-    _____________________________
+    _________________________
     Firma del Director(a)
     """
     signature_lines = signature_text.strip().splitlines()
@@ -99,6 +95,11 @@ def generate_certificate(certificate_type, first_name, last_name, id_number, yea
     for i, line in enumerate(signature_lines):
         text_width = c.stringWidth(line, "Helvetica", 12)
         c.drawString((width - text_width) / 2, signature_start_y - i * line_height, line)
+
+    # Colocar la fecha debajo de la firma
+    issue_date = f"  Expedido el {current_date}"  
+    date_text_width = c.stringWidth(issue_date, "Helvetica", 12)
+    c.drawString((width - date_text_width) / 2, signature_start_y - (len(signature_lines) * line_height) - 20, issue_date)
 
     c.showPage()
     c.save()

@@ -3,7 +3,7 @@ from database.connection import get_db_connection
 def get_students():
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT student_id, id_number, first_name, last_name FROM students")
+    cursor.execute("SELECT student_id, id_number, first_name, last_name, current_year FROM students")
     students = cursor.fetchall()
     connection.close()
     return students

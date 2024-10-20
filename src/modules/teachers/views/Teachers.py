@@ -1,4 +1,3 @@
-import datetime
 import tkinter as tk
 from tkinter import messagebox
 from api.controllers.attendanceController import register_teacher_attendance
@@ -20,31 +19,137 @@ fields = [
 
 # Actions
 
-def add_teacher(tree, 
-                id_number, name, lastName, age, sex, address, subject, phone, 
-                new_window):
+def add_teacher(tree, id_number, name, lastName, age, sex, address, subject, phone, new_window):
+    # Validate input first
+    if not validate_teacher_input(tree, id_number, name, lastName, age, sex, address, subject, phone):
+        return
+
     success, message = add_teacher_new(id_number, name, lastName, age, sex, address, subject, phone)
     if success:
         tree.insert("", "end", values=(id_number, name, lastName, age, sex, address, subject, phone))
         print(f"Nuevo docente agregado con cédula: {id_number}, nombre: {name}, apellido: {lastName}")
         populate_teacher_table(tree)
+        messagebox.showinfo("Éxito", "Docente agregado exitosamente.")
         new_window.destroy()
     else:
         messagebox.showerror("Error", message)
 
-def update_teacher(tree, selected_item, 
-                   id_number, name, lastName, age, sex, address, subject, phone, 
-                   new_window):
-    teacher_id = tree.item(selected_item, 'values')[0]
+def update_teacher(tree, selected_item, id_number, name, lastName, age, sex, address, subject, phone, new_window):
+    # Validate input first
+    if not validate_teacher_input(tree, id_number, name, lastName, age, sex, address, subject, phone):
+        return
 
+    teacher_id = tree.item(selected_item, 'values')[0]
+    
     success, message = update_teacher_by_id(teacher_id, id_number, name, lastName, age, sex, address, subject, phone)
     if success:
         tree.item(selected_item, values=(id_number, name, lastName, age, sex, address, subject, phone))
         print(f"Docente actualizado con cédula: {id_number}, nombre: {name}, apellido: {lastName}")
         populate_teacher_table(tree)
+        messagebox.showinfo("Éxito", "Docente actualizado exitosamente.")
         new_window.destroy()
     else:
         messagebox.showerror("Error", message)
+
+        
+def validate_teacher_fields(id_number, name, lastName, age, sex, address, subject, phone):
+    """
+    Validates all teacher fields according to specific rules
+    Returns: (bool, str) - (is_valid, error_message)
+    """
+    # Validate ID Number (Cédula)
+    if not id_number:
+        return False, "La cédula es obligatoria"
+    
+    # Verificar formato V-números
+    if not id_number.startswith('V-'):
+        return False, "La cédula debe comenzar con 'V-'"
+    
+    # Verificar que después del V- solo haya números
+    numbers_part = id_number[2:]  # Obtener la parte después del V-
+    if not numbers_part.isdigit():
+        return False, "La cédula debe tener el formato V-números (ejemplo: V-12345678)"
+    
+    # Verificar longitud de la parte numérica
+    if len(numbers_part) < 7 or len(numbers_part) > 8:
+        return False, "La parte numérica de la cédula debe tener entre 7 y 8 dígitos"
+
+    # Validate Name
+    if not name:
+        return False, "El nombre es obligatorio"
+    if len(name) < 2:
+        return False, "El nombre debe tener al menos 2 caracteres"
+    if not all(char.isalpha() or char.isspace() for char in name):
+        return False, "El nombre solo debe contener letras y espacios"
+
+    # Validate Last Name
+    if not lastName:
+        return False, "El apellido es obligatorio"
+    if len(lastName) < 2:
+        return False, "El apellido debe tener al menos 2 caracteres"
+    if not all(char.isalpha() or char.isspace() for char in lastName):
+        return False, "El apellido solo debe contener letras y espacios"
+
+    # Validate Age
+    if not age:
+        return False, "La edad es obligatoria"
+    try:
+        age_num = int(age)
+        if age_num < 18 or age_num > 80:
+            return False, "La edad debe estar entre 18 y 80 años"
+    except ValueError:
+        return False, "La edad debe ser un número válido"
+
+    # Validate Sex
+    valid_sex_options = ['M', 'F', 'Masculino', 'Femenino']
+    if not sex:
+        return False, "El sexo es obligatorio"
+    if sex.upper() not in [opt.upper() for opt in valid_sex_options]:
+        return False, "El sexo debe ser 'M' o 'F' (o Masculino/Femenino)"
+
+    # Validate Address
+    if not address:
+        return False, "La dirección es obligatoria"
+    if len(address) < 5:
+        return False, "La dirección debe tener al menos 5 caracteres"
+    if len(address) > 200:
+        return False, "La dirección no debe exceder los 200 caracteres"
+
+    # Validate Subject
+    if not subject:
+        return False, "La asignatura es obligatoria"
+    if len(subject) < 2:
+        return False, "La asignatura debe tener al menos 2 caracteres"
+    if len(subject) > 50:
+        return False, "La asignatura no debe exceder los 50 caracteres"
+
+    # Validate Phone
+    if not phone:
+        return False, "El teléfono es obligatorio"
+    if not phone.replace('-', '').replace('+', '').isdigit():
+        return False, "El teléfono debe contener solo números, guiones o el símbolo +"
+    if len(phone.replace('-', '').replace('+', '')) < 7:
+        return False, "El teléfono debe tener al menos 7 dígitos"
+    if len(phone.replace('-', '').replace('+', '')) > 15:
+        return False, "El teléfono no debe exceder los 15 dígitos"
+
+    return True, ""
+
+def validate_teacher_input(tree, id_number, name, lastName, age, sex, address, subject, phone):
+    """
+    Validates teacher input before adding or updating
+    Returns: bool - indicating if validation passed
+    """
+    is_valid, error_message = validate_teacher_fields(
+        id_number, name, lastName, age, sex, address, subject, phone
+    )
+    
+    if not is_valid:
+        messagebox.showerror("Error de Validación", error_message)
+        return False
+    
+    return True
+
 
 # Windows
 
@@ -152,7 +257,7 @@ def open_teacher_details(tree, selected_item):
 
     details_window = tk.Toplevel()
     details_window.title("Detalles del Docente")
-    details_window.geometry("300x200")
+    details_window.geometry("400x200")
     details_window.configure(bg=BACKGROUND_COLOR)
 
     data_keys = {
@@ -175,7 +280,7 @@ def open_teacher_details(tree, selected_item):
         label.grid(row=row, column=col * 2, padx=(10, 5), pady=5, sticky='e')
 
     close_button = tk.Button(details_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=details_window.destroy)
-    close_button.grid(row=(len(data_keys) // 2) + 1, column=1, pady=10, columnspan=3)
+    close_button.grid(row=(len(data_keys) // 2) + 1, column=0, pady=10, columnspan=8)
 
     close_button.bind("<Enter>", on_enter)
     close_button.bind("<Leave>", on_leave)
@@ -215,9 +320,10 @@ def open_attendance_form(tree, selected_item):
 
     attendance_window = tk.Toplevel()
     attendance_window.title("Registrar Asistencia")
-    attendance_window.geometry("300x275")
+    attendance_window.geometry("300x250")
     attendance_window.configure(bg=BACKGROUND_COLOR)
 
+    # Campos de entrada
     entry_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
     entry_frame.pack(pady=10)
 
@@ -232,12 +338,16 @@ def open_attendance_form(tree, selected_item):
         entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
         entries[label_text] = entry
 
-    entries["Cédula"].insert(0, teacher_data.get("id_number", "N/A"))
-    entries["Nombre"].insert(0, teacher_data.get("first_name", "N/A"))
-    entries["Asignatura"].insert(0, teacher_data.get("subject", "N/A"))
-    current_date = datetime.datetime.now().strftime("%d/%m/%Y")
-    entries["Fecha"].insert(0, current_date)
+    # Asignar valores por defecto, asegurando que no excedan los índices
+    entries["Cédula"].insert(0, teacher_data[0] if len(teacher_data) > 0 else "N/A")
+    entries["Nombre"].insert(0, teacher_data[1] if len(teacher_data) > 1 else "N/A")
+    entries["Asignatura"].insert(0, teacher_data[6] if len(teacher_data) > 6 else "N/A")  # Usar N/A si no hay asignatura
 
+    # El usuario ahora podrá ingresar manualmente la fecha, se deja vacío el campo para que lo rellene
+    # O puedes poner un formato sugerido
+    entries["Fecha"].insert(0, "")  # Campo de fecha en blanco para que el usuario lo complete
+
+    # Opción para marcar asistencia
     attendance_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
     attendance_frame.pack(pady=10)
 
@@ -251,14 +361,26 @@ def open_attendance_form(tree, selected_item):
     yes_radio.pack(side="left", padx=5)
     no_radio.pack(side="left", padx=5)
 
+    # Botón para registrar asistencia
     def register_attendance():
         attendance_status = attendance_var.get()
-        success, message = register_teacher_attendance(teacher_id, attendance_status)
-        if success:
-            print(f"Asistencia del docente {teacher_data['first_name']} registrada como: {attendance_status}")
-            messagebox.showinfo("Éxito", message)
-        else:
-            messagebox.showerror("Error", message)
+        teacher_data_list = list(teacher_data)
+
+        # Obtener la fecha ingresada por el usuario
+        entered_date = entries["Fecha"].get()
+        if not entered_date:
+            messagebox.showerror("Error", "Por favor ingrese una fecha válida.")
+            return
+
+        # Añadir la asistencia y la fecha ingresada a la lista
+        teacher_data_list.append(entered_date)
+        teacher_data_list.append(attendance_status)
+
+        # Actualiza la columna de asistencia en la tabla con la nueva fecha y estado de asistencia
+        tree.item(selected_item, values=teacher_data_list)
+
+        # Mostrar messagebox confirmando el registro
+        messagebox.showinfo("Registro de Asistencia", f"Asistencia del docente {teacher_data[1]} marcada como: {attendance_status} en la fecha: {entered_date}")
         attendance_window.destroy()
 
     register_button = tk.Button(attendance_window, text="Registrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR,
@@ -274,7 +396,7 @@ def on_click_action(tree, edit_button, delete_button, details_button, attendance
         edit_button.config(state="normal", command=lambda: open_edit_teacher_form(tree, selected_item))
         delete_button.config(state="normal", command=lambda: confirm_delete_teacher(tree, selected_item, selected_teacher[0]))
         details_button.config(state="normal", command=lambda: open_teacher_details(tree, selected_item))
-        attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item))
+        attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item, selected_teacher))
     else:
         edit_button.config(state="disabled")
         delete_button.config(state="disabled")

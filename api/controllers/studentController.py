@@ -1,4 +1,5 @@
-from api.models.studentModel import insert_student, delete_student_from_db, get_student_details, get_students, insert_family_member, insert_representative, update_student_in_db
+from api.models.studentModel import delete_student_from_db, get_student_details, get_students, insert_family_member, insert_representative, update_student_in_db
+from api.models.studentModel import insert_student
 
 def get_all_students():
     raw_students = get_students()
@@ -8,7 +9,8 @@ def get_all_students():
                 'student_id': student[0],
                 'id_number': student[1],
                 'first_name': student[2],
-                'last_name': student[3]
+                'last_name': student[3],
+                'current_year': student[4]
             }
             for student in raw_students
         ]

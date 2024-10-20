@@ -39,13 +39,14 @@ def populate_table(tree):
                 student['id_number'],
                 student['first_name'],
                 student['last_name'],
+                student['current_year'],
             ))
     else:
         print("No se pudo obtener la información de los estudiantes.")
 
 def create_teacher_table(window):
     style = ttk.Style()
-    style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25)
+    style.configure("Treeview", background=ENTRY_BACKGROUND, foreground=ENTRY_FOREGROUND, fieldbackground=BACKGROUND_COLOR, rowheight=25, font=("Helvetica", 12))
     style.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background=BACKGROUND_COLOR, foreground=BUTTON_COLOR_NEW)
 
     columns = ("teacher_id", "cedula", "nombres", "asignatura", "telefono")
