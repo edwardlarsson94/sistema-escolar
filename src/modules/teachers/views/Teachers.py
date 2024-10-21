@@ -313,17 +313,19 @@ def confirm_delete_teacher(tree, selected_item, id_number):
 def open_attendance_form(tree, selected_item):
     teacher_id = tree.item(selected_item, 'values')[0]
     
+    # Obtener los detalles del docente
     success, teacher_data = get_teacher_details(teacher_id)
     if not success:
         messagebox.showerror("Error", teacher_data)
         return
 
+    # Crear la ventana de asistencia
     attendance_window = tk.Toplevel()
     attendance_window.title("Registrar Asistencia")
     attendance_window.geometry("300x275")
     attendance_window.configure(bg=BACKGROUND_COLOR)
 
-    # Campos de entrada
+    # Crear el frame para los campos de entrada
     entry_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
     entry_frame.pack(pady=10)
 
@@ -338,15 +340,15 @@ def open_attendance_form(tree, selected_item):
         entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
         entries[label_text] = entry
 
-    # Asignar valores por defecto, accediendo a teacher_data como diccionario
+    # Asignar los valores del docente en los campos correspondientes
     entries["Cédula"].insert(0, teacher_data.get("id_number", "N/A"))
     entries["Nombre"].insert(0, teacher_data.get("first_name", "N/A"))
-    entries["Asignatura"].insert(0, teacher_data.get("subject", "N/A"))  # Usar N/A si no hay asignatura
+    entries["Asignatura"].insert(0, teacher_data.get("subject", "N/A"))
 
-    # El usuario ahora podrá ingresar manualmente la fecha, se deja vacío el campo para que lo rellene
-    entries["Fecha"].insert(0, "")  # Campo de fecha en blanco para que el usuario lo complete
+    # Campo para ingresar la fecha manualmente
+    entries["Fecha"].insert(0, "")  # Campo de fecha vacío
 
-    # Opción para marcar asistencia
+    # Crear el frame para la selección de asistencia
     attendance_frame = tk.Frame(attendance_window, bg=BACKGROUND_COLOR)
     attendance_frame.pack(pady=10)
 
@@ -360,32 +362,43 @@ def open_attendance_form(tree, selected_item):
     yes_radio.pack(side="left", padx=5)
     no_radio.pack(side="left", padx=5)
 
-    # Botón para registrar asistencia
+    # Función para registrar la asistencia
     def register_attendance():
         attendance_status = attendance_var.get()
-        teacher_data_list = list(teacher_data.values())  # Obtener los valores del diccionario teacher_data como lista
-
+        
         # Obtener la fecha ingresada por el usuario
         entered_date = entries["Fecha"].get()
         if not entered_date:
             messagebox.showerror("Error", "Por favor ingrese una fecha válida.")
             return
 
-        # Añadir la asistencia y la fecha ingresada a la lista
-        teacher_data_list.append(entered_date)
-        teacher_data_list.append(attendance_status)
+        # Crear la lista para actualizar la tabla de Tkinter
+        teacher_data_list = [
+            teacher_data.get("id_number", "N/A"),
+            teacher_data.get("first_name", "N/A"),
+            teacher_data.get("last_name", "N/A"),
+            teacher_data.get("subject", "N/A"),
+            entered_date,  # Fecha ingresada
+            attendance_status  # Estado de asistencia
+        ]
 
-        # Actualiza la columna de asistencia en la tabla con la nueva fecha y estado de asistencia
+        # Actualizar la tabla de Tkinter con los nuevos datos
         tree.item(selected_item, values=teacher_data_list)
 
-        # Mostrar messagebox confirmando el registro
-        messagebox.showinfo("Registro de Asistencia", f"Asistencia del docente {teacher_data.get('first_name', 'N/A')} marcada como: {attendance_status} en la fecha: {entered_date}")
+        # Registrar la asistencia en el sistema (backend)
+        success, message = register_teacher_attendance(teacher_id, attendance_status)
+        if success:
+            messagebox.showinfo("Éxito", f"Asistencia del docente {teacher_data.get('first_name', 'N/A')} registrada exitosamente como {attendance_status}.")
+        else:
+            messagebox.showerror("Error", f"No se pudo registrar la asistencia: {message}")
+        
+        # Cerrar la ventana de asistencia
         attendance_window.destroy()
 
+    # Botón para registrar asistencia
     register_button = tk.Button(attendance_window, text="Registrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR,
                                 command=register_attendance)
     register_button.pack(pady=10)
-
 # Handles
 
 def on_click_action(tree, edit_button, delete_button, details_button, attendance_button, reports_button):
