@@ -1,24 +1,64 @@
-import datetime
-from fpdf import FPDF
+import tkinter as tk
 from tkinter import messagebox
-from api.controllers.attendanceController import generate_today_attendance_report
+from fpdf import FPDF
+from api.controllers.attendanceController import generate_attendance_report_by_date
+import datetime
 
-def generate_attendance_report():
-    success, data = generate_today_attendance_report()
+from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, ENTRY_BACKGROUND, ENTRY_FOREGROUND, TITLE_COLOR
+
+# Función para abrir la ventana de reportes
+def open_reports_window():
+    # Crear la ventana de reportes
+    reports_window = tk.Toplevel()
+    reports_window.title("Generar Reporte de Asistencia")
+    reports_window.geometry("400x300")
+    reports_window.configure(bg=BACKGROUND_COLOR)
+
+    # Título de la ventana
+    label_title = tk.Label(reports_window, text="Generar Reporte de Asistencia", bg=BACKGROUND_COLOR, fg=TITLE_COLOR, font=("Helvetica", 18, "bold"))
+    label_title.pack(pady=20)
+
+    # Campo de fecha
+    label_date = tk.Label(reports_window, text="Ingrese la fecha (YYYY-MM-DD):", bg=BACKGROUND_COLOR, fg=BUTTON_TEXT_COLOR)
+    label_date.pack(pady=5)
+
+    date_entry = tk.Entry(reports_window, bg=ENTRY_BACKGROUND, fg=ENTRY_FOREGROUND)
+    date_entry.pack(pady=5)
+
+    # Botón para generar el reporte, pasando el valor del campo de fecha
+    generate_button = tk.Button(reports_window, text="Generar Reporte", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR,
+                                command=lambda: generate_attendance_report(date_entry.get()))  # Se pasa el valor de la fecha ingresada
+    generate_button.pack(pady=10)
+
+    # Botón para cerrar la ventana
+    close_button = tk.Button(reports_window, text="Cerrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, command=reports_window.destroy)
+    close_button.pack(pady=20)
+
+# Función para generar el reporte de asistencia
+def generate_attendance_report(selected_date):
+    # Verificar si la fecha ingresada no está vacía
+    if not selected_date:
+        messagebox.showerror("Error", "Por favor ingrese una fecha válida en el formato YYYY-MM-DD.")
+        return
+
+    # Verificar si la fecha está en formato correcto (YYYY-MM-DD)
+    try:
+        datetime.datetime.strptime(selected_date, "%Y-%m-%d")
+    except ValueError:
+        messagebox.showerror("Error", "La fecha ingresada no tiene el formato correcto. Use YYYY-MM-DD.")
+        return
+
+    # Llamar al controlador para obtener los datos del reporte de asistencia para la fecha seleccionada
+    success, data = generate_attendance_report_by_date(selected_date)
     
-    # Verificar si hay éxito en la obtención del reporte
+    # Verificar si se obtuvieron los datos correctamente
     if not success:
-        messagebox.showerror("Error", "No se pudo obtener el reporte diario de asistencias.")
+        messagebox.showerror("Error", f"No se pudo obtener el reporte de asistencias para la fecha: {selected_date}.")
         return
 
-    # Verificar si los datos tienen el formato correcto (una lista de diccionarios)
-    if not isinstance(data, list) or not all(isinstance(record, dict) for record in data):
-        messagebox.showerror("Error", "El formato de los datos de asistencia no es válido.")
-        return
-    
-    # Verificar si hay datos para generar el reporte
+    # Verificar si hay datos disponibles
     if len(data) == 0:
-        messagebox.showerror("Error", "No hay datos de asistencia para el día de hoy.")
+        messagebox.showerror("Error", f"No hay datos de asistencia para la fecha: {selected_date}.")
         return
 
     # Crear PDF

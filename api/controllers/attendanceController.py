@@ -1,15 +1,13 @@
-from api.models.attendanceModel import add_attendance, get_today_attendances
+from api.models.attendanceModel import add_attendance, get_attendances_by_date
 from datetime import datetime
 
-def register_teacher_attendance(teacher_id, status):
-    date = datetime.now().strftime("%Y-%m-%d")
+def register_teacher_attendance(teacher_id, status, date):
+    print(date)
     success, message = add_attendance(teacher_id, date, status)
     return success, message
 
-def generate_today_attendance_report():
-    today = datetime.now().strftime("%Y-%m-%d")
-    success, records = get_today_attendances(today)
-    
+def generate_attendance_report_by_date(selected_date):
+    success, records = get_attendances_by_date(selected_date)
     if success:
         report_data = []
         
@@ -26,4 +24,4 @@ def generate_today_attendance_report():
         
         return True, report_data
     else:
-        return False, "No se pudo generar el reporte de asistencia."
+        return False, "No se pudo generar el reporte de asistencia para la fecha seleccionada."

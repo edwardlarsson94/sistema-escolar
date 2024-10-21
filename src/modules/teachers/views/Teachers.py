@@ -386,7 +386,7 @@ def open_attendance_form(tree, selected_item):
         tree.item(selected_item, values=teacher_data_list)
 
         # Registrar la asistencia en el sistema (backend)
-        success, message = register_teacher_attendance(teacher_id, attendance_status)
+        success, message = register_teacher_attendance(teacher_id, attendance_status, entered_date)
         if success:
             messagebox.showinfo("Éxito", f"Asistencia del docente {teacher_data.get('first_name', 'N/A')} registrada exitosamente como {attendance_status}.")
         else:

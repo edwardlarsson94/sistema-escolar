@@ -1,5 +1,5 @@
 import tkinter as tk
-from  src.modules.records.Reports import generate_attendance_report
+from  src.modules.records.Reports import open_reports_window
 from constants.Colors import BACKGROUND_COLOR, BUTTON_COLOR, BUTTON_TEXT_COLOR, BUTTON_COLOR_HOVER, TITLE_COLOR
 from constants.Texts import HOME_SUBTITLE, GLOBAL_STUDENT_TITLE_ADD, HOME_BUTTON_DELETE, HOME_BUTTON_EDIT, TEACHER_TITLE_ADD, GLOBAL_STUDENT, GLOBAL_TEACHER
 from components.Table import create_student_table, populate_table, bind_row_selection
@@ -69,7 +69,7 @@ def create_teacher_tab(notebook):
     details_button = tk.Button(actions_frame, text="Detalles", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     delete_button = tk.Button(actions_frame, text=HOME_BUTTON_DELETE, bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
     attendance_button = tk.Button(actions_frame, text="Asistencia", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", state="disabled")
-    reports_button = tk.Button(actions_frame, text="Reportes", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", command=generate_attendance_report)
+    reports_button = tk.Button(actions_frame, text="Reportes", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR, relief="flat", command=open_reports_window)
 
 
     for button in [edit_button, details_button, delete_button, attendance_button, reports_button]:

@@ -15,7 +15,7 @@ def add_attendance(teacher_id, date, status):
     finally:
         connection.close()
 
-def get_today_attendances(today):
+def get_attendances_by_date(selected_date):
     connection = get_db_connection()
     cursor = connection.cursor()
         
@@ -26,7 +26,7 @@ def get_today_attendances(today):
         JOIN attendances a ON t.teacher_id = a.teacher_id
         WHERE a.date = ?
         """
-        cursor.execute(query, (today,))
+        cursor.execute(query, (selected_date,))
         records = cursor.fetchall()
         return True, records
     except Exception as e:
