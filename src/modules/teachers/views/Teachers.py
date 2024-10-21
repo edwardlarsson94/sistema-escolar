@@ -320,7 +320,7 @@ def open_attendance_form(tree, selected_item):
 
     attendance_window = tk.Toplevel()
     attendance_window.title("Registrar Asistencia")
-    attendance_window.geometry("300x250")
+    attendance_window.geometry("300x275")
     attendance_window.configure(bg=BACKGROUND_COLOR)
 
     # Campos de entrada
@@ -338,13 +338,12 @@ def open_attendance_form(tree, selected_item):
         entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
         entries[label_text] = entry
 
-    # Asignar valores por defecto, asegurando que no excedan los índices
-    entries["Cédula"].insert(0, teacher_data[0] if len(teacher_data) > 0 else "N/A")
-    entries["Nombre"].insert(0, teacher_data[1] if len(teacher_data) > 1 else "N/A")
-    entries["Asignatura"].insert(0, teacher_data[6] if len(teacher_data) > 6 else "N/A")  # Usar N/A si no hay asignatura
+    # Asignar valores por defecto, accediendo a teacher_data como diccionario
+    entries["Cédula"].insert(0, teacher_data.get("id_number", "N/A"))
+    entries["Nombre"].insert(0, teacher_data.get("first_name", "N/A"))
+    entries["Asignatura"].insert(0, teacher_data.get("subject", "N/A"))  # Usar N/A si no hay asignatura
 
     # El usuario ahora podrá ingresar manualmente la fecha, se deja vacío el campo para que lo rellene
-    # O puedes poner un formato sugerido
     entries["Fecha"].insert(0, "")  # Campo de fecha en blanco para que el usuario lo complete
 
     # Opción para marcar asistencia
@@ -364,7 +363,7 @@ def open_attendance_form(tree, selected_item):
     # Botón para registrar asistencia
     def register_attendance():
         attendance_status = attendance_var.get()
-        teacher_data_list = list(teacher_data)
+        teacher_data_list = list(teacher_data.values())  # Obtener los valores del diccionario teacher_data como lista
 
         # Obtener la fecha ingresada por el usuario
         entered_date = entries["Fecha"].get()
@@ -380,7 +379,7 @@ def open_attendance_form(tree, selected_item):
         tree.item(selected_item, values=teacher_data_list)
 
         # Mostrar messagebox confirmando el registro
-        messagebox.showinfo("Registro de Asistencia", f"Asistencia del docente {teacher_data[1]} marcada como: {attendance_status} en la fecha: {entered_date}")
+        messagebox.showinfo("Registro de Asistencia", f"Asistencia del docente {teacher_data.get('first_name', 'N/A')} marcada como: {attendance_status} en la fecha: {entered_date}")
         attendance_window.destroy()
 
     register_button = tk.Button(attendance_window, text="Registrar", bg=BUTTON_COLOR, fg=BUTTON_TEXT_COLOR,
@@ -396,7 +395,7 @@ def on_click_action(tree, edit_button, delete_button, details_button, attendance
         edit_button.config(state="normal", command=lambda: open_edit_teacher_form(tree, selected_item))
         delete_button.config(state="normal", command=lambda: confirm_delete_teacher(tree, selected_item, selected_teacher[0]))
         details_button.config(state="normal", command=lambda: open_teacher_details(tree, selected_item))
-        attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item, selected_teacher))
+        attendance_button.config(state="normal", command=lambda: open_attendance_form(tree, selected_item))
     else:
         edit_button.config(state="disabled")
         delete_button.config(state="disabled")
